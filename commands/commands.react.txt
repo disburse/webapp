@@ -1,6 +1,9 @@
 1. To save a node module as a dependency in the package json files:
+    npm install web3 --save
 
-npm install web3 --save
+2. To install UI components and CSS style sheets:
+    npm install semantic-ui-react --save
+    npm install semantic-ui-css --save
 
 This command will save the web3 package as a dependency of the webapp project.
 

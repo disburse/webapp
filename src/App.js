@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Disburse from './components/Disburse';
 import './App.css';
 const Web3 = require("web3");
 
@@ -34,6 +35,8 @@ class App extends Component {
     return (
       <div className="App">
         <h1> It begins... </h1>
+
+        <Disburse></Disburse>
       </div>
     );
   }
