@@ -4,9 +4,9 @@ import 'semantic-ui-css/semantic.min.css';
 
 class Disburse extends Component {
 
-    constructor(props){
-        super(props);
-    }
+    //constructor(props){
+    //    super(props);
+    //}
 
     render() {
         return (
