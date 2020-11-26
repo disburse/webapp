@@ -8,3 +8,11 @@
 This command will save the web3 package as a dependency of the webapp project.
 
 To start react app with command: npm start
+
+3. For navigation install: 
+    npm install --save react-router-dom
+
+An example of how navigation works can be found here:
+    https://www.golangprograms.com/how-to-create-simple-react-router-to-navigate-multiple-pages.html
+
+    
