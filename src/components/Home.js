@@ -21,7 +21,9 @@ const Home = () => {
                     }
                 }}
                 onConnect={(provider) => {
-                    const web3 = new Web3(provider); // add provider to web3
+                    // Temporarily commenting out to correct netlify problem:
+                    // Line 24:27:  'web3' is assigned a value but never used  no-unused-vars
+                    // const web3 = new Web3(provider); // add provider to web3
                 }}
                 onClose={() => {
                     console.log("Web3Connect Modal Closed"); // modal has closed
