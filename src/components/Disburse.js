@@ -10,8 +10,16 @@ class Disburse extends Component {
         loading: false
     }
 
+    // Convert a wei balance to ether for display purposes
+    // web3.utils.fromWei(balance, 'ether')
+
     //constructor(props){
     //    super(props);
+    //}
+
+    //static async getInitialProps(props) {
+        // URL Address
+        //props.query.address;
     //}
 
     // Event handler with async to be able to call ethereum

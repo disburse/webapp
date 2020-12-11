@@ -15,4 +15,12 @@ To start react app with command: npm start
 An example of how navigation works can be found here:
     https://www.golangprograms.com/how-to-create-simple-react-router-to-navigate-multiple-pages.html
 
-    
+4. Wallet connections: 
+    https://www.npmjs.com/package/web3connect
+
+    npm install --save web3connect
+    npm install --save @walletconnect/web3-provider
+
+    npm install --save web3modal  (Replaces Web3Connect)
+
+
