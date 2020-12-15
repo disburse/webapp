@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Message } from 'semantic-ui-react';
+import { Grid, Input, Button, Message, Label } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 
 class Disburse extends Component {
@@ -44,7 +44,53 @@ class Disburse extends Component {
     render() {
         return (
         <div>
-            <Button loading={this.state.loading} primary onClick={this.onClick}>Save</Button>
+
+            <Grid textAlign='left' columns={3} divided>
+                <Grid.Row>
+                    <Grid.Column></Grid.Column>
+                    <Grid.Column>
+                        <Input label='Owner Address:' placeholder='0x...' />
+                    </Grid.Column>
+                    <Grid.Column></Grid.Column>
+                </Grid.Row>
+
+                <Grid.Row>
+                    <Grid.Column></Grid.Column>
+                    <Grid.Column>
+                        <Input label='Beneficiary Address:' placeholder='0x...' />
+                    </Grid.Column>
+                    <Grid.Column></Grid.Column>
+                </Grid.Row>
+
+                <Grid.Row>
+                    <Grid.Column></Grid.Column>
+                    <Grid.Column>
+                        <Input label='Disbursement Date:' />
+                    </Grid.Column>
+                    <Grid.Column></Grid.Column>
+                </Grid.Row>
+
+                <Grid.Row>
+                    <Grid.Column></Grid.Column>
+                    <Grid.Column>
+                        <Input labelPosition='right' type='text' placeholder='Amount'>
+                            <Label>Disbursement Amount:</Label>
+                            <input />
+                            <Label basic>ETH</Label>
+                        </Input>
+                    </Grid.Column>
+                    <Grid.Column></Grid.Column>
+                </Grid.Row>
+
+                <Grid.Row>
+                    <Grid.Column></Grid.Column>
+                    <Grid.Column textAlign='right'>
+                        <Button loading={this.state.loading} primary onClick={this.onClick}>Save</Button>
+                    </Grid.Column>
+                    <Grid.Column></Grid.Column>
+                </Grid.Row>
+            </Grid>
+
             <Message header="" content={this.state.message}/>
             <Message error header="Oops!" content={this.state.errorMessage} />
         </div>

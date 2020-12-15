@@ -23,4 +23,22 @@ An example of how navigation works can be found here:
 
     npm install --save web3modal  (Replaces Web3Connect)
 
+5. To build a joint solidity / react project use (Would not work):
+
+    truffle unbox react
+    truffle compile
+
+    cd client
+    npm install    // Install dependencies
+    npm start      // Test react app
+
+
+NOTES:
+
+The person who creates the trust is called the settlor, grantor, or trustor.
+
+The person who controls the assets in a trust is called the trustee.
+
+The person who benefits from the trust is called the beneficiary.
+
 
