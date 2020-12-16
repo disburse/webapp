@@ -3,17 +3,16 @@ import { Grid, Input, Button, Label } from 'semantic-ui-react';
 import { Header } from 'semantic-ui-react'
 import { Divider } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
+import getWeb3 from '../getWeb3';
 
 class Disburse extends Component {
 
     state = {
+        accounts: '',
         message: '',
         errorMessage: 'default error',
         loading: false
     }
-
-    // Convert a wei balance to ether for display purposes
-    // web3.utils.fromWei(balance, 'ether')
 
     //constructor(props){
     //    super(props);
@@ -43,10 +42,15 @@ class Disburse extends Component {
         this.setState({loading: false});
     };
 
+    componentDidMount = async () => {
+        const web3 = await getWeb3();
+        const accounts = await web3.eth.getAccounts();
+        this.setState({ accounts: accounts });
+    }
+
     render() {
         return (
         <div>
-
 
             <Grid textAlign='left' columns={3}>
                 <Grid.Row>
@@ -60,7 +64,7 @@ class Disburse extends Component {
                     <Grid.Column>
                         <Divider />
                         <Header size='medium'>Disbributrion Fund</Header>
-                        <Input label='Owner Address:' placeholder='0x...' />
+                        <Input label='Owner Address:' placeholder={this.state.accounts[0]} />
                         <br /><br />
                         <Input labelPosition='right' type='text' placeholder='Amount'>
                             <Label>Disbursement Amount:</Label>
@@ -68,7 +72,7 @@ class Disburse extends Component {
                             <Label basic>ETH</Label>
                         </Input>
                         <br /><br />
-                        <Label size='large'>Total Fund: 10.00 ETH</Label>
+                        <Label size='large'>Total Funds: 10.00 ETH</Label>
                         <br /><br />
                         <Button loading={this.state.loading} primary onClick={this.onClick}>Fund</Button>
                         <Divider />
@@ -97,6 +101,7 @@ class Disburse extends Component {
                 </Grid.Row>
             </Grid>
 
+            Accounts: {this.state.accounts}
 
         </div>
 
