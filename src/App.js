@@ -4,6 +4,7 @@ import About from './components/About';
 import Error from './components/Error';
 import Navigation from './components/Navigation';
 import Disburse from './components/Disburse';
+import Recovery from './components/Recovery';
 import './App.css';
 
 class App extends Component {
@@ -17,6 +18,7 @@ class App extends Component {
           <Navigation />
             <Switch>
               <Route path="/" component={Disburse} exact/>
+              <Route path="/recovery" component={Recovery}/>
               <Route path="/about" component={About}/>
               <Route component={Error}/>
             </Switch>
