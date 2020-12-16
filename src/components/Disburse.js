@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Grid, Input, Button, Message, Label } from 'semantic-ui-react';
+import { Grid, Input, Button, Label } from 'semantic-ui-react';
+import { Header } from 'semantic-ui-react'
+import { Divider } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 class Disburse extends Component {
@@ -45,55 +47,62 @@ class Disburse extends Component {
         return (
         <div>
 
-            <Grid textAlign='left' columns={3} divided>
+
+            <Grid textAlign='left' columns={3}>
+                <Grid.Row>
+                    <Grid.Column></Grid.Column>
+                    <Grid.Column></Grid.Column>
+                    <Grid.Column></Grid.Column>
+                </Grid.Row>
+                
                 <Grid.Row>
                     <Grid.Column></Grid.Column>
                     <Grid.Column>
+                        <Divider />
+                        <Header size='medium'>Disbributrion Fund</Header>
                         <Input label='Owner Address:' placeholder='0x...' />
-                    </Grid.Column>
-                    <Grid.Column></Grid.Column>
-                </Grid.Row>
-
-                <Grid.Row>
-                    <Grid.Column></Grid.Column>
-                    <Grid.Column>
-                        <Input label='Beneficiary Address:' placeholder='0x...' />
-                    </Grid.Column>
-                    <Grid.Column></Grid.Column>
-                </Grid.Row>
-
-                <Grid.Row>
-                    <Grid.Column></Grid.Column>
-                    <Grid.Column>
-                        <Input label='Disbursement Date:' />
-                    </Grid.Column>
-                    <Grid.Column></Grid.Column>
-                </Grid.Row>
-
-                <Grid.Row>
-                    <Grid.Column></Grid.Column>
-                    <Grid.Column>
+                        <br /><br />
                         <Input labelPosition='right' type='text' placeholder='Amount'>
                             <Label>Disbursement Amount:</Label>
                             <input />
                             <Label basic>ETH</Label>
                         </Input>
+                        <br /><br />
+                        <Label size='large'>Total Fund: 10.00 ETH</Label>
+                        <br /><br />
+                        <Button loading={this.state.loading} primary onClick={this.onClick}>Fund</Button>
+                        <Divider />
                     </Grid.Column>
                     <Grid.Column></Grid.Column>
                 </Grid.Row>
 
                 <Grid.Row>
                     <Grid.Column></Grid.Column>
-                    <Grid.Column textAlign='right'>
-                        <Button loading={this.state.loading} primary onClick={this.onClick}>Save</Button>
+                    <Grid.Column>
+                        <Header size='medium'>Add Beneficiaries</Header>
+                        <Input label='Beneficiary Address:' placeholder='0x...' />
+                        <br /><br />
+                        <Input label='Disbursement Date:' />
+                        <br /><br />
+                        <Input labelPosition='right' type='text' placeholder='Amount'>
+                            <Label>Disbursement Amount:</Label>
+                            <input />
+                            <Label basic>ETH</Label>
+                        </Input>
+                        <br /><br />
+                        <Button loading={this.state.loading} primary onClick={this.onClick}>Add Beneficiary</Button>
+                        <Divider />
                     </Grid.Column>
                     <Grid.Column></Grid.Column>
                 </Grid.Row>
             </Grid>
 
-            <Message header="" content={this.state.message}/>
-            <Message error header="Oops!" content={this.state.errorMessage} />
+
         </div>
+
+            // <Message header="" content={this.state.message}/>
+            // <Message error header="Oops!" content={this.state.errorMessage} />
+
             // Retrieve the value of a state variable
             //value = {this.state.variableName}
 

@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 // Custom React Components
-import Home from './components/Home';
 import About from './components/About';
-import Contact from './components/Contact';
 import Error from './components/Error';
 import Navigation from './components/Navigation';
 import Disburse from './components/Disburse';
@@ -45,14 +43,12 @@ class App extends Component {
 
     <BrowserRouter>
       <div className="App">
-        <h1> Welcome </h1>
+        <h2> Disburse.Finance </h2>
 
         <Navigation />
           <Switch>
-             <Route path="/" component={Home} exact/>
-             <Route path="/disburse" component={Disburse}/>
+             <Route path="/" component={Disburse} exact/>
              <Route path="/about" component={About}/>
-             <Route path="/contact" component={Contact}/>
              <Route component={Error}/>
           </Switch>
 
