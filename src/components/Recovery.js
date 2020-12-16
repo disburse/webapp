@@ -4,26 +4,40 @@ import { Header } from 'semantic-ui-react'
 import { Divider } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 import getWeb3 from '../getWeb3';
+const Disburse = require('../contracts/DisburseV1.json');
 
 class Recovery extends Component {
 
+    //static web3;
+
     state = {
-        accounts: '',
+        trustAddress: '',
+        trustBalance: '',
+        amount: '',
         message: '',
         errorMessage: 'default error',
         loading: false
     }
 
-    // Event handler with async to be able to call ethereum
-    onClick = async (event) => {
+    onClickDeposit = async (event) => {
 
         // This prevents form from being submitted to the server
         event.preventDefault();
         this.setState({loading: true});
 
         try {
-            // perform some work
-            this.setState({ message: "Button clicked!" });
+            /* 
+            const web3 = await getWeb3();
+            var weiAmount = web3.utils.toWei('10', 'ether');
+ 
+            const id = await web3.eth.net.getId();
+            const deployedNetwork = Disburse.networks[id];
+            const disburse = new web3.eth.Contract(Disburse.abi, deployedNetwork.address);
+
+            await disburse.methods.contributeToTrust().send({ from: this.state.trustAddress, value: weiAmount });
+            var balance = await disburse.methods.getTrustBalance(this.state.trustAddress).call();
+            this.setState({ trustBalance: balance });
+            */
         }
         catch(err)
         {
@@ -33,10 +47,27 @@ class Recovery extends Component {
         this.setState({loading: false});
     };
 
+    onClickWithdraw = async (event) => {
+
+    };
+
     componentDidMount = async () => {
+        console.log("COMPONENT DID MOUNT");
         const web3 = await getWeb3();
         const accounts = await web3.eth.getAccounts();
-        this.setState({ accounts: accounts });
+        this.setState({ trustAddress: accounts[0] });
+        console.log("TRUST ACCOUNT: " + this.state.trustAddress);
+
+        const id = await web3.eth.net.getId();
+        console.log("NETWORK ID: " + id);
+
+        const deployedNetwork = Disburse.networks[id];
+        console.log("DEPLOYED NETWORK: " + deployedNetwork.address);
+
+        const disburse = new web3.eth.Contract(Disburse.abi, deployedNetwork.address);
+        var balance = await disburse.methods.getTrustBalance(this.state.trustAddress).call();
+        console.log("TRUST BALANCE: " + balance);
+        this.setState({ trustBalance: balance });
     }
 
     render() {
@@ -57,7 +88,7 @@ class Recovery extends Component {
                         <Header size='medium'>Account Details</Header>
                         <Header sub>Use the form below to deposit or withdraw your funds.</Header>
                         <br />
-                        <Input label='Address:' placeholder={this.state.accounts[0]} />
+                        <Input label='Address:' placeholder={this.state.trustAddress} />
                         <br /><br />
                         <Input labelPosition='right' type='text' placeholder='Amount'>
                             <Label>Amount:</Label>
@@ -65,10 +96,10 @@ class Recovery extends Component {
                             <Label basic>ETH</Label>
                         </Input>
                         <br /><br />
-                        <Label size='large'>Available Funds: 10.00 ETH</Label>
+                        <Label size='large'>Available Funds: {this.state.trustBalance} ETH</Label>
                         <br /><br />
-                        <Button loading={this.state.loading} primary onClick={this.onClick}>Deposit</Button>
-                        <Button loading={this.state.loading} primary onClick={this.onClick}>Withdraw</Button>
+                        <Button loading={this.state.loading} primary onClick={this.onClickDeposit}>Deposit</Button>
+                        <Button loading={this.state.loading} primary onClick={this.onClickWithdraw}>Withdraw</Button>
                         <Divider />
                     </Grid.Column>
                     <Grid.Column></Grid.Column>
