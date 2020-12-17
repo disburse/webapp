@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import About from './components/About';
-import Error from './components/Error';
-import Navigation from './components/Navigation';
+//import { BrowserRouter, Route, Switch } from 'react-router-dom';
+//import About from './components/About';
+//import Error from './components/Error';
+//import Navigation from './components/Navigation';
 import Disburse from './components/Disburse';
-import Recovery from './components/Recovery';
+//import Recovery from './components/Recovery';
 import './App.css';
 
 class App extends Component {
@@ -13,6 +13,16 @@ class App extends Component {
     console.log("APP.JS COMPONENT DID MOUNT");
   }
 
+  render() {
+    return (
+      <div className="App">
+          <h2> Disburse.Finance </h2>
+          <Disburse></Disburse>
+      </div>
+    );
+  }
+
+  /*
   render() {
     return (
       <BrowserRouter>
@@ -31,6 +41,7 @@ class App extends Component {
       </BrowserRouter>
     );
   }
+  */
 }
 
 export default App;
