@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Grid, Input, Button, Label } from 'semantic-ui-react';
-import { Header } from 'semantic-ui-react'
-import { Divider } from 'semantic-ui-react'
+import { Grid, Input, Button, Label, Header, Divider, Table } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import getWeb3 from '../getWeb3';
+//import BeneficiaryRow from './BeneficiaryRow';
 
 class Disburse extends Component {
 
@@ -46,6 +45,24 @@ class Disburse extends Component {
     onClickWithdraw = async (event) => {
     }
 
+    static async getInitialProps(props){
+        console.log("GET INITIAL PROPS CALLED: " + props.query);
+    }
+
+    renderRows() {
+        /*
+        return this.props.request.map((request, index) => {
+            return( 
+                <BeneficiaryRow
+                        key={index}    
+                        request={request}
+                        address={this.props.address}
+                />
+            );
+        })
+        */
+    }
+
     componentDidMount = async () => {
         const web3 = await getWeb3();
         const accounts = await web3.eth.getAccounts();
@@ -60,7 +77,7 @@ class Disburse extends Component {
                     <Grid.Column></Grid.Column>
                     <Grid.Column>
                         <Divider />
-                        <Header size='medium'>Funding Account</Header>
+                        <Header size='medium'>Fund Account</Header>
                         <Header sub>Use the form below to deposit or withdraw funds available for future disbursement.</Header>
                         <br />
                         <Input label='Address:' placeholder={this.state.accounts[0]} />
@@ -83,7 +100,7 @@ class Disburse extends Component {
                 <Grid.Row>
                     <Grid.Column></Grid.Column>
                     <Grid.Column>
-                        <Header size='medium'>Beneficiaries</Header>
+                        <Header size='medium'>Add Beneficiary</Header>
                         <Header sub>Use the form below to add beneficiaries that will receive funds after the disbursement date.  Beneficiaries can only be added by the owner of the funding account.</Header>
                         <br />
                         <Input label='Address:' placeholder='0x...' />
@@ -97,6 +114,34 @@ class Disburse extends Component {
                         <Input label='Disbursement Date:' />
                         <br /><br />
                         <Button loading={this.state.loading} primary onClick={this.onClick}>Add Beneficiary</Button>
+                        <Divider />
+                    </Grid.Column>
+                    <Grid.Column></Grid.Column>
+                </Grid.Row>
+                <Grid.Row>
+                    <Grid.Column></Grid.Column>
+                    <Grid.Column>
+                        <Header size='medium'>Beneficiaries</Header>
+                        <Header sub>The table below lists all beneficiaries that will receive funds after their disbursement date.</Header>
+                        <br />
+                        <Table>
+                            <Table.Header>
+                                <Table.Row>
+                                    <Table.HeaderCell>Beneficiary</Table.HeaderCell>
+                                    <Table.HeaderCell>Amount</Table.HeaderCell>
+                                    <Table.HeaderCell>Disbursement Date</Table.HeaderCell>
+                                </Table.Row>
+                            </Table.Header>
+                            <Table.Body>
+                                {this.renderRows()}
+                                <Table.Row>
+                                    <Table.Cell>Cell</Table.Cell>
+                                    <Table.Cell>Cell</Table.Cell>
+                                    <Table.Cell>Cell</Table.Cell>
+                                </Table.Row>
+                            </Table.Body>
+                        </Table>
+
                         <Divider />
                     </Grid.Column>
                     <Grid.Column></Grid.Column>
