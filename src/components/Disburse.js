@@ -9,6 +9,7 @@ class Disburse extends Component {
 
     state = {
         accounts: '',
+        amount: '',
         message: '',
         errorMessage: 'default error',
         loading: false
@@ -68,7 +69,7 @@ class Disburse extends Component {
                         <br /><br />
                         <Input labelPosition='right' type='text' placeholder='Amount'>
                             <Label>Disbursement Amount:</Label>
-                            <input />
+                            <input value={this.state.amount} onChange={event => this.setState({amount: event.target.value})} />
                             <Label basic>ETH</Label>
                         </Input>
                         <br /><br />

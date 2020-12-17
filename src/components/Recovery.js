@@ -8,15 +8,19 @@ const Disburse = require('../contracts/DisburseV1.json');
 
 class Recovery extends Component {
 
-    //static web3;
-
     state = {
-        trustAddress: '',
-        trustBalance: '',
+        contractAddress: '',
+        address: '',
+        balance: '',
         amount: '',
         message: '',
         errorMessage: 'default error',
         loading: false
+    }
+
+    constructor(props) {
+        super(props);
+        console.log("CONSTRUCTOR CALLED");
     }
 
     onClickDeposit = async (event) => {
@@ -30,11 +34,9 @@ class Recovery extends Component {
             const web3 = await getWeb3();
             var weiAmount = web3.utils.toWei('10', 'ether');
  
-            const id = await web3.eth.net.getId();
-            const deployedNetwork = Disburse.networks[id];
-            const disburse = new web3.eth.Contract(Disburse.abi, deployedNetwork.address);
+            const disburse = new web3.eth.Contract(Disburse.abi, this.state.contractAddress);
 
-            await disburse.methods.contributeToTrust().send({ from: this.state.trustAddress, value: weiAmount });
+            await disburse.methods.contributeToTrust().send({ from: this.state.address, value: weiAmount });
             var balance = await disburse.methods.getTrustBalance(this.state.trustAddress).call();
             this.setState({ trustBalance: balance });
             */
@@ -51,29 +53,36 @@ class Recovery extends Component {
 
     };
 
+    onClickLoad = async (event) => {
+        console.log("ON CLICK LOAD");
+        
+    };
+
     componentDidMount = async () => {
-        console.log("COMPONENT DID MOUNT");
+        console.log("RECOVER.JS COMPONENT DID MOUNT");
+
         const web3 = await getWeb3();
+
         const accounts = await web3.eth.getAccounts();
-        this.setState({ trustAddress: accounts[0] });
-        console.log("TRUST ACCOUNT: " + this.state.trustAddress);
+        this.setState({ address: accounts[0] });
+        console.log("ACCOUNT: " + this.state.address);
 
-        const id = await web3.eth.net.getId();
-        console.log("NETWORK ID: " + id);
+        const networkId = await web3.eth.net.getId();
+        console.log("NETWORK ID: " + networkId);
+  
+        const contract = Disburse.networks[networkId];
+        this.setState({contractAddress: contract.address});
+        console.log("CONTRACT ADDRESS: " + this.state.contractAddress);
 
-        const deployedNetwork = Disburse.networks[id];
-        console.log("DEPLOYED NETWORK: " + deployedNetwork.address);
-
-        const disburse = new web3.eth.Contract(Disburse.abi, deployedNetwork.address);
-        var balance = await disburse.methods.getTrustBalance(this.state.trustAddress).call();
-        console.log("TRUST BALANCE: " + balance);
-        this.setState({ trustBalance: balance });
+        const disburse = new web3.eth.Contract(Disburse.abi, this.state.contractAddress);
+        var balance = await disburse.methods.getTrustBalance(this.state.address).call();
+        console.log("BALANCE: " + balance);
+        this.setState({ balance: balance });
     }
 
     render() {
         return (
         <div>
-
             <Grid textAlign='left' columns={3}>
                 <Grid.Row>
                     <Grid.Column></Grid.Column>
@@ -87,16 +96,20 @@ class Recovery extends Component {
                         <Divider />
                         <Header size='medium'>Account Details</Header>
                         <Header sub>Use the form below to deposit or withdraw your funds.</Header>
-                        <br />
-                        <Input label='Address:' placeholder={this.state.trustAddress} />
+                        <br />                        
+                        <Input labelPosition='right' type='text' placeholder='Address'>
+                            <Label>Address:</Label>
+                            <input value={this.state.address} />
+                            <Button onClick={this.onClickLoad} >Load</Button>
+                        </Input>
                         <br /><br />
                         <Input labelPosition='right' type='text' placeholder='Amount'>
                             <Label>Amount:</Label>
-                            <input />
+                            <input value={this.state.amount} onChange={event => this.setState({amount: event.target.value})} />
                             <Label basic>ETH</Label>
                         </Input>
                         <br /><br />
-                        <Label size='large'>Available Funds: {this.state.trustBalance} ETH</Label>
+                        <Label size='large'>Available Funds: {this.state.balance} ETH</Label>
                         <br /><br />
                         <Button loading={this.state.loading} primary onClick={this.onClickDeposit}>Deposit</Button>
                         <Button loading={this.state.loading} primary onClick={this.onClickWithdraw}>Withdraw</Button>

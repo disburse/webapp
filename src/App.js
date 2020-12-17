@@ -9,6 +9,10 @@ import './App.css';
 
 class App extends Component {
 
+  componentDidMount = async () => {
+    console.log("APP.JS COMPONENT DID MOUNT");
+  }
+
   render() {
     return (
       <BrowserRouter>
