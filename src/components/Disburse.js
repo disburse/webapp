@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { Grid, Input, Button, Label, Header, Divider, Table } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import getWeb3 from '../getWeb3';
-//import BeneficiaryRow from './BeneficiaryRow';
+import BeneficiaryRow from './BeneficiaryRow';
+import Faq from './Faq';
+import DisburseHeader from './Header';
+import DisburseFooter from './Footer';
 
 class Disburse extends Component {
 
@@ -12,7 +15,7 @@ class Disburse extends Component {
         message: '',
         errorMessage: 'default error',
         loading: false
-    }
+    } 
 
     //constructor(props){
     //    super(props);
@@ -45,22 +48,29 @@ class Disburse extends Component {
     onClickWithdraw = async (event) => {
     }
 
-    static async getInitialProps(props){
-        console.log("GET INITIAL PROPS CALLED: " + props.query);
-    }
-
     renderRows() {
+        return(
+            <BeneficiaryRow  
+                address = '1'
+                amount = '2'
+                disbursement = '3'
+            />
+        );
+
         /*
-        return this.props.request.map((request, index) => {
+        return this.props.beneficiaries.map((request, index) => {
             return( 
                 <BeneficiaryRow
+                        // This syntax is how you pass data to components
                         key={index}    
+                        id={index}
                         request={request}
                         address={this.props.address}
                 />
             );
         })
         */
+        
     }
 
     componentDidMount = async () => {
@@ -68,10 +78,12 @@ class Disburse extends Component {
         const accounts = await web3.eth.getAccounts();
         this.setState({ accounts: accounts });
     }
-
+      
     render() {
         return (
         <div>
+            <DisburseHeader />
+
             <Grid textAlign='left' columns={3}>
                 <Grid.Row>
                     <Grid.Column></Grid.Column>
@@ -127,38 +139,43 @@ class Disburse extends Component {
                         <Table>
                             <Table.Header>
                                 <Table.Row>
-                                    <Table.HeaderCell>Beneficiary</Table.HeaderCell>
+                                    <Table.HeaderCell>Address</Table.HeaderCell>
                                     <Table.HeaderCell>Amount</Table.HeaderCell>
-                                    <Table.HeaderCell>Disbursement Date</Table.HeaderCell>
+                                    <Table.HeaderCell>Disbursement</Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header>
                             <Table.Body>
                                 {this.renderRows()}
-                                <Table.Row>
-                                    <Table.Cell>Cell</Table.Cell>
-                                    <Table.Cell>Cell</Table.Cell>
-                                    <Table.Cell>Cell</Table.Cell>
-                                </Table.Row>
                             </Table.Body>
                         </Table>
-
+                        <Divider />
+                    </Grid.Column>
+                    <Grid.Column></Grid.Column>
+                </Grid.Row>
+                <Grid.Row>
+                    <Grid.Column></Grid.Column>
+                    <Grid.Column>
+                        <Header size='medium'>Frequently Asked Questions</Header>
+                        <Faq />
                         <Divider />
                     </Grid.Column>
                     <Grid.Column></Grid.Column>
                 </Grid.Row>
             </Grid>
+
+            <DisburseFooter />
         </div>
-
-            // <Message header="" content={this.state.message}/>
-            // <Message error header="Oops!" content={this.state.errorMessage} />
-
-            // Retrieve the value of a state variable
-            //value = {this.state.variableName}
-
-            // Set the value of a state variable on a form element
-            //onChange = {event => this.setState({variableName: event.target.value})}
         );
     }
 }
 
 export default Disburse;
+
+// <Message header="" content={this.state.message}/>
+// <Message error header="Oops!" content={this.state.errorMessage} />
+
+// Retrieve the value of a state variable
+//value = {this.state.variableName}
+
+// Set the value of a state variable on a form element
+//onChange = {event => this.setState({variableName: event.target.value})}
