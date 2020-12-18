@@ -1,9 +1,15 @@
 import React from 'react'
-//import { Grid, Header, List, Segment, Container } from 'semantic-ui-react';
+import { Menu, Container } from 'semantic-ui-react';
 
 const DisburseHeader = () => (
     <div>
-        <h2> Disburse.Finance </h2>
+        <Menu fixed='top' inverted>
+            <Container>
+                <Menu.Item as='a' header>Disburse.Finance</Menu.Item>
+                <Menu.Item as='a'>Home</Menu.Item>
+                <Menu.Item as='a'>About</Menu.Item>
+            </Container>
+        </Menu>
     </div>
 );
 
