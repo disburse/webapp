@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Grid, Input, Button, Label, Header, Table, Container } from 'semantic-ui-react';
+import { Grid, Input, Button, Label, Header, Table, Container, Message } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
-import getWeb3 from '../getWeb3';
+import web3 from '../web3';
 import BeneficiaryRow from './BeneficiaryRow';
 import Faq from './Faq';
 import DisburseHeader from './Header';
 import DisburseFooter from './Footer';
+const DisburseJSON = require('../contracts/DisburseV1.json');
 
 // Header & Footer
 //https://react.semantic-ui.com/layouts/fixed-menu
@@ -14,16 +15,19 @@ import DisburseFooter from './Footer';
 class Disburse extends Component {
 
     state = {
-        accounts: '',
+        trustAddress: '',
+        disburseAddress: '',
+        balance: '',
         amount: '',
         message: '',
-        errorMessage: 'default error',
+        errorMessage: '',
         loading: false
     } 
 
-    //constructor(props){
-    //    super(props);
-    //}
+    constructor(props){
+        super(props);
+        console.log("CONSTRUCTOR CALLED");
+    }
 
     //static async getInitialProps(props) {
         // URL Address
@@ -38,8 +42,15 @@ class Disburse extends Component {
         this.setState({loading: true});
 
         try {
-            // perform some work
-            this.setState({ message: "Button clicked!" });
+            console.log("START DEPOSIT");
+            var weiAmount = web3.utils.toWei(this.state.amount, 'ether');
+            const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
+            await disburse.methods.contributeToTrust().send({ from: this.state.trustAddress, value: weiAmount });
+            var weiBalance = await disburse.methods.getTrustBalance(this.state.trustAddress).call();
+            var etherBalance = web3.utils.fromWei(weiBalance, 'ether');
+            this.setState({ balance: etherBalance });
+            this.setState({ amount: '' });
+            this.setState({ errorMessage: '' });
         }
         catch(err)
         {
@@ -50,6 +61,34 @@ class Disburse extends Component {
     };
 
     onClickWithdraw = async (event) => {
+
+        // This prevents form from being submitted to the server
+        event.preventDefault();
+        this.setState({loading: true});
+
+        try {
+            console.log("START WITHRAW");
+            const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
+            await disburse.methods.withdrawTrustBalance().send({from: this.state.trustAddress});
+            var weiBalance = await disburse.methods.getTrustBalance(this.state.trustAddress).call();
+            var etherBalance = web3.utils.fromWei(weiBalance, 'ether');
+            this.setState({ balance: etherBalance });
+            this.setState({ amount: '' });
+            this.setState({ errorMessage: '' });
+        }
+        catch(err)
+        {
+            this.setState({ errorMessage: err.message });
+        }
+
+        this.setState({loading: false});
+
+    }
+
+    displayError() {        
+        if (this.state.errorMessage.length > 0) {
+            return (<Message error header="Oops!" content={this.state.errorMessage} />);
+        }
     }
 
     renderRows() {
@@ -78,9 +117,17 @@ class Disburse extends Component {
     }
 
     componentDidMount = async () => {
-        const web3 = await getWeb3();
         const accounts = await web3.eth.getAccounts();
-        this.setState({ accounts: accounts });
+        this.setState({ trustAddress: accounts[0] });
+
+        const networkId = await web3.eth.net.getId();  
+        const contract = DisburseJSON.networks[networkId];
+        this.setState({contractAddress: contract.address});
+
+        const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
+        var weiBalance = await disburse.methods.getTrustBalance(this.state.trustAddress).call();        
+        var etherBalance = web3.utils.fromWei(weiBalance, 'ether');
+        this.setState({ balance: etherBalance });
     }
     
     render() {
@@ -96,7 +143,7 @@ class Disburse extends Component {
                             <Header size='medium'>Fund Account</Header>
                             <Header sub>Use the form below to deposit or withdraw funds available for future disbursement.</Header>
                             <br />
-                            <Input label='Address:' placeholder={this.state.accounts[0]} />
+                            <Input label='Address:' placeholder={this.state.trustAddress} />
                             <br /><br />
                             <Input labelPosition='right' type='text' placeholder='Amount'>
                                 <Label>Amount:</Label>
@@ -104,8 +151,9 @@ class Disburse extends Component {
                                 <Label basic>ETH</Label>
                             </Input>
                             <br /><br />
-                            <Label size='large'>Deposited Funds: 10.00 ETH</Label>
+                            <Label size='large'>Deposited Funds: {this.state.balance} ETH</Label>
                             <br /><br />
+                            {this.displayError()}
                             <Button loading={this.state.loading} primary onClick={this.onClickDeposit}>Deposit</Button>
                             <Button loading={this.state.loading} primary onClick={this.onClickWithdraw}>Withdraw</Button>
                         </Grid.Column>
