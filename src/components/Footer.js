@@ -1,6 +1,10 @@
 import React from 'react'
 import { Grid, Header, List, Segment, Container, Divider } from 'semantic-ui-react';
 
+// Header & Footer
+//https://react.semantic-ui.com/layouts/fixed-menu
+//https://github.com/Semantic-Org/Semantic-UI-React/blob/master/docs/src/layouts/FixedMenuLayout.js
+
 const DisburseFooter = () => (
 
     <Segment inverted vertical style={{ margin: '5em 0em 0em', padding: '5em 0em' }}>

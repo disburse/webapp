@@ -1,5 +1,5 @@
 import React from 'react'
-import { Accordion } from 'semantic-ui-react'
+import { Accordion, Header } from 'semantic-ui-react'
 
 const panels = [
   {
@@ -15,7 +15,10 @@ const panels = [
 ]
 
 const Faq = () => (
-  <Accordion panels={panels} />
+  <div>
+    <Header size='medium'>Frequently Asked Questions</Header>
+    <Accordion panels={panels} />
+  </div>
 )
 
 export default Faq
