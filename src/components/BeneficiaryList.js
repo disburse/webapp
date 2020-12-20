@@ -9,7 +9,9 @@ const DisburseJSON = require('../contracts/DisburseV1.json');
 class BeneficiaryList extends Component {
 
     state = {
-        contractAddress: ''
+        contractAddress: '',
+        beneficiaryList: [],
+        renderRows: ''
     } 
 
     componentDidMount = async () => {
@@ -17,32 +19,34 @@ class BeneficiaryList extends Component {
         const contract = DisburseJSON.networks[networkId];
         this.setState({contractAddress: contract.address});
 
+        const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
+        var count = await disburse.methods.getBeneficiaryCount().call({from: this.props.trustAddress});
 
+        var list = [];
+        for (var i=0; i<count; i++){
+            var beneficiary = await disburse.methods.getBeneficiaryAtIndex(i).call({from: this.props.trustAddress});
+            list.push(beneficiary);
+        }
+
+        this.setState({beneficiaryList: list});
     }
     
     renderRows() {
-        return(
-            <BeneficiaryRow  
-                address = '1'
-                amount = '2'
-                disbursement = '3'
-            />
-        );
+        // Map is a function available on arrays
+        // Item represents every element in the array, which in this scenario is a Struct
+        return this.state.beneficiaryList.map((item) => {
 
-        /*
-        return this.props.beneficiaries.map((request, index) => {
+            var ethAmount = web3.utils.fromWei(item['amount'], 'ether');
+            var formattedDate = item['disburseDate'];
+
             return( 
                 <BeneficiaryRow
-                        // This syntax is how you pass data to components
-                        key={index}    
-                        id={index}
-                        request={request}
-                        address={this.props.address}
+                        address = {item['beneficiaryAddress']}
+                        amount = {ethAmount}
+                        disbursement = {formattedDate}
                 />
             );
         })
-        */
-        
     }
 
     render() {
@@ -55,7 +59,7 @@ class BeneficiaryList extends Component {
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>Address</Table.HeaderCell>
-                            <Table.HeaderCell>Amount</Table.HeaderCell>
+                            <Table.HeaderCell>Amount (ETH)</Table.HeaderCell>
                             <Table.HeaderCell>Disbursement</Table.HeaderCell>
                             <Table.HeaderCell>Remove</Table.HeaderCell>
                         </Table.Row>
