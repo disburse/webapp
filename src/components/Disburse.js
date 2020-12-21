@@ -12,7 +12,7 @@ class Disburse extends Component {
 
     state = {
         contractAddress: '',
-        trustAddress: ''
+        trustAddress: '',
     } 
 
     // constructor(props){
@@ -25,27 +25,57 @@ class Disburse extends Component {
         this.setState({trustAddress: address})
     }
 
+    callbackUpdateAddBeneficiary = () => {        
+        console.log("PARENT FORCE UPDATE CALLED (UpdateAddBeneficiary)");
+        
+        //this.refs.cAddBeneficiary.updateAvailableFundsBalance();
+        this.refs.cAddBeneficiary.componentDidMount();
+    }
+
+    callbackUpdateBeneficiaryList = () => {        
+        console.log("PARENT FORCE UPDATE CALLED (UpdateBeneficiaryList)");
+        
+        //this.refs.cBeneficiaryList.updateAllocatedFundsBalance();
+        this.refs.cBeneficiaryList.componentDidMount();
+    }
+
     render() {
         return (
         <div>
             <DisburseHeader />
             <Container style={{ marginTop: '4em' }}>
-                <Grid textAlign='left' columns={3}>
+                <Grid textAlign='left' columns={1}>
                     <Grid.Row>
-                        <Grid.Column />
                         <Grid.Column>
-                            <FundAccount parentCallback = {this.callbackTrustAddress} /> 
-                            <br />
-                            <AddBeneficiary trustAddress={this.state.trustAddress} />
-                            <br />
-                            <BeneficiaryList trustAddress={this.state.trustAddress} />
-                            <br />
+                            <FundAccount
+                                ref = "cFundAccount"
+                                parentForceUpdate = {this.callbackUpdateAddBeneficiary}  
+                                parentCallback = {this.callbackTrustAddress} /> 
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row>
+                        <Grid.Column>
+                            <AddBeneficiary 
+                                ref = "cAddBeneficiary"
+                                parentForceUpdate = {this.callbackUpdateBeneficiaryList} 
+                                trustAddress = {this.state.trustAddress} />
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row>
+                        <Grid.Column>
+                            <BeneficiaryList 
+                                ref = "cBeneficiaryList"
+                                trustAddress = {this.state.trustAddress} />
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row>
+                        <Grid.Column>
                             <Faq />
                         </Grid.Column>
-                        <Grid.Column />
                     </Grid.Row>
                 </Grid>
             </Container>
+
             <DisburseFooter />
         </div>
         );

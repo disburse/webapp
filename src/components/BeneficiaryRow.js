@@ -1,7 +1,15 @@
 import React, { Component } from 'react';
 import { Table, Button } from 'semantic-ui-react';
+import web3 from '../web3';
+
+const DisburseJSON = require('../contracts/DisburseV1.json');
 
 class BeneficiaryRow extends Component {
+
+    state = {
+        errorMessage: '',
+        loading: false
+    } 
 
     onClickRemove = async (event) => {
 
@@ -10,11 +18,19 @@ class BeneficiaryRow extends Component {
         this.setState({loading: true});
 
         try {
-            console.log("REMOVE BENEFICIARY");
+            console.log("REMOVE BENEFICIARY (index): " + this.props.id);
+            console.log("TRUST: " + this.props.trustAddress);
+
+            const disburse = new web3.eth.Contract(DisburseJSON.abi, this.props.contractAddress);
+            
+            await disburse.methods.removeBeneficiaryAtIndex(this.props.id).send({from: this.props.trustAddress});
+        
+            this.props.parentCallback();
         }
         catch(err)
         {
             this.setState({ errorMessage: err.message });
+            this.props.errorCallback();
         }
 
         this.setState({loading: false}); 

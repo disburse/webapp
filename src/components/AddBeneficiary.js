@@ -12,14 +12,38 @@ class AddBeneficiary extends Component {
         beneficiaryAddress: '',
         amount: '',
         delayInSeconds: '',
+        availableFunds: '',
         errorMessage: '',
         loading: false
     } 
+
+    updateAvailableFundsBalance = async () => {
+
+        if (this.props.trustAddress != null){
+
+            // Update allocated funds balance
+            const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
+            var trustBalance = await disburse.methods.getTrustBalance(this.props.trustAddress).call();        
+            var allocatedBalance = await disburse.methods.getBeneficiaryBalance(this.props.trustAddress).call();
+        
+            var weiBalance = 0;
+            if (trustBalance >= 0 && allocatedBalance >= 0){
+                weiBalance = trustBalance - allocatedBalance;
+            }
+        
+            var etherBalance = web3.utils.fromWei(weiBalance.toString(), 'ether');
+            this.setState({ availableFunds: etherBalance });
+
+            // When this balance updates, we need to update the balance on other components
+            this.props.parentForceUpdate();
+        }
+    }
 
     componentDidMount = async () => {
         const networkId = await web3.eth.net.getId();  
         const contract = DisburseJSON.networks[networkId];
         this.setState({contractAddress: contract.address});
+        this.updateAvailableFundsBalance();
     }
 
     onClickAdd = async (event) => {
@@ -41,6 +65,10 @@ class AddBeneficiary extends Component {
                                     this.state.delayInSeconds, 
                                     weiAmount)
                                 .send({from: this.props.trustAddress});
+
+            this.updateAvailableFundsBalance();
+
+            this.setState({ errorMessage: '' });
         }
         catch(err)
         {
@@ -49,7 +77,6 @@ class AddBeneficiary extends Component {
 
         this.setState({loading: false});
 
-        // Render again to remove error message
         this.forceUpdate();
     }
 
@@ -76,6 +103,8 @@ class AddBeneficiary extends Component {
                 </Input>
                 <br /><br />
                 <Input label='Disbursement Date:' placeholder='01/30/2020' onChange={event => this.setState({delayInSeconds: event.target.value})} />
+                <br /><br />
+                <Label size='large'>Available Funds: {this.state.availableFunds} ETH</Label>
                 <br /><br />
                 {this.displayError()}
                 <Button loading={this.state.loading} primary onClick={this.onClickAdd}>Add</Button>

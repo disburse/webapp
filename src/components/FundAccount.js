@@ -11,10 +11,29 @@ class FundAccount extends Component {
         contractAddress: '',
         trustAddress: '',
         amount: '',
-        balance: '',
+        depositedFunds: '',
         errorMessage: '',
         loading: false
     } 
+
+    updateDepositedFundsBalance = async () => {
+
+        if (this.state.trustAddress != null){
+                
+            const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
+            var weiBalance = await disburse.methods.getTrustBalance(this.state.trustAddress).call();
+            
+            var etherBalance = 0;
+            if (weiBalance > 0){
+                etherBalance = web3.utils.fromWei(weiBalance.toString(), 'ether');
+            }
+
+            this.setState({ depositedFunds: etherBalance });    
+            
+            // When this balance updates, we need to update the balance on other components
+            this.props.parentForceUpdate();
+        }
+    }
 
     componentDidMount = async () => {
         const accounts = await web3.eth.getAccounts();
@@ -27,10 +46,7 @@ class FundAccount extends Component {
         const contract = DisburseJSON.networks[networkId];
         this.setState({contractAddress: contract.address});
 
-        const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
-        var weiBalance = await disburse.methods.getTrustBalance(this.state.trustAddress).call();        
-        var etherBalance = web3.utils.fromWei(weiBalance, 'ether');
-        this.setState({ balance: etherBalance });
+        this.updateDepositedFundsBalance();
     }
 
     // Event handler with async to be able to call ethereum
@@ -45,9 +61,9 @@ class FundAccount extends Component {
             var weiAmount = web3.utils.toWei(this.state.amount, 'ether');
             const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
             await disburse.methods.contributeToTrust().send({ from: this.state.trustAddress, value: weiAmount });
-            var weiBalance = await disburse.methods.getTrustBalance(this.state.trustAddress).call();
-            var etherBalance = web3.utils.fromWei(weiBalance, 'ether');
-            this.setState({ balance: etherBalance });
+
+            this.updateDepositedFundsBalance();
+
             this.setState({ amount: '' });
             this.setState({ errorMessage: '' });
         }
@@ -59,7 +75,7 @@ class FundAccount extends Component {
         this.setState({loading: false});
 
         // Render again to remove error message
-        this.forceUpdate();  
+        //this.forceUpdate();  
     };
 
     onClickWithdraw = async (event) => {
@@ -71,10 +87,11 @@ class FundAccount extends Component {
         try {
             console.log("START WITHRAW");
             const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
-            await disburse.methods.withdrawTrustBalance().send({from: this.state.trustAddress});
-            var weiBalance = await disburse.methods.getTrustBalance(this.state.trustAddress).call();
-            var etherBalance = web3.utils.fromWei(weiBalance, 'ether');
-            this.setState({ balance: etherBalance });
+            var weiAmount = web3.utils.toWei(this.state.amount, 'ether');
+            await disburse.methods.withdrawAmountFromTrustBalance(weiAmount).send({from: this.state.trustAddress});
+            
+            this.updateDepositedFundsBalance();
+
             this.setState({ amount: '' });
             this.setState({ errorMessage: '' });
         }
@@ -86,7 +103,7 @@ class FundAccount extends Component {
         this.setState({loading: false});
 
         // Render again to remove error message
-        this.forceUpdate();  
+        //this.forceUpdate();  
     }
 
     displayError() {       
@@ -109,7 +126,7 @@ class FundAccount extends Component {
                     <Label basic>ETH</Label>
                 </Input>
                 <br /><br />
-                <Label size='large'>Deposited Funds: {this.state.balance} ETH</Label>
+                <Label size='large'>Deposited Funds: {this.state.depositedFunds} ETH</Label>
                 <br /><br />
                 {this.displayError()}
                 <Button loading={this.state.loading} primary onClick={this.onClickDeposit}>Deposit</Button>
