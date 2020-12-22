@@ -22,6 +22,9 @@ class BeneficiaryList extends Component {
 
         // Row removed, re-rendering table of beneficiaries
         this.componentDidMount();
+
+        // Call back parent component to update available funds (addBeneficiary)
+        this.props.parentForceUpdate();
     }
 
     callbackUpdateErrorMessage = () => {        
@@ -52,12 +55,16 @@ class BeneficiaryList extends Component {
         this.setState({contractAddress: contract.address});
 
         const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
-        var count = await disburse.methods.getBeneficiaryCount().call({from: this.props.trustAddress});
+        var topId = await disburse.methods.getTopBeneficiaryId().call({from: this.props.trustAddress});
 
         var list = [];
-        for (var i=0; i<count; i++){
-            var beneficiary = await disburse.methods.getBeneficiaryAtIndex(i).call({from: this.props.trustAddress});
-            list.push(beneficiary);
+        for (var i=0; i<topId; i++){
+            var beneficiary = await disburse.methods.getBeneficiaryById(i).call({from: this.props.trustAddress});
+            
+            // This might be an id of a beneficiary that has been previously removed.
+            if (beneficiary.beneficiaryAddress !== '0x0000000000000000000000000000000000000000'){
+                list.push(beneficiary);
+            }
         }
 
         this.setState({beneficiaryList: list});
@@ -78,7 +85,7 @@ class BeneficiaryList extends Component {
                 <BeneficiaryRow
                         ref = "cBeneficiaryRow"
                         key = {index}
-                        id = {index}
+                        id = {item['id']}
                         address = {item['beneficiaryAddress']}
                         amount = {ethAmount}
                         disbursement = {formattedDate}
@@ -108,6 +115,7 @@ class BeneficiaryList extends Component {
                 <Table>
                     <Table.Header>
                         <Table.Row>
+                            <Table.HeaderCell>ID</Table.HeaderCell>
                             <Table.HeaderCell>Address</Table.HeaderCell>
                             <Table.HeaderCell>Amount (ETH)</Table.HeaderCell>
                             <Table.HeaderCell>Disbursement</Table.HeaderCell>

@@ -65,6 +65,7 @@ class Disburse extends Component {
                         <Grid.Column>
                             <BeneficiaryList 
                                 ref = "cBeneficiaryList"
+                                parentForceUpdate = {this.callbackUpdateAddBeneficiary} 
                                 trustAddress = {this.state.trustAddress} />
                         </Grid.Column>
                     </Grid.Row>

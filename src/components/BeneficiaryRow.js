@@ -18,12 +18,12 @@ class BeneficiaryRow extends Component {
         this.setState({loading: true});
 
         try {
-            console.log("REMOVE BENEFICIARY (index): " + this.props.id);
+            console.log("REMOVE BENEFICIARY (id): " + this.props.id);
             console.log("TRUST: " + this.props.trustAddress);
 
             const disburse = new web3.eth.Contract(DisburseJSON.abi, this.props.contractAddress);
             
-            await disburse.methods.removeBeneficiaryAtIndex(this.props.id).send({from: this.props.trustAddress});
+            await disburse.methods.removeBeneficiary(this.props.id).send({from: this.props.trustAddress});
         
             this.props.parentCallback();
         }
@@ -39,6 +39,7 @@ class BeneficiaryRow extends Component {
     render() {
         return (
             <Table.Row>
+                <Table.Cell>{this.props.id}</Table.Cell>
                 <Table.Cell>{this.props.address}</Table.Cell>
                 <Table.Cell>{this.props.amount}</Table.Cell>
                 <Table.Cell>{this.props.disbursement}</Table.Cell>

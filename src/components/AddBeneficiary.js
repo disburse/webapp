@@ -68,6 +68,10 @@ class AddBeneficiary extends Component {
 
             this.updateAvailableFundsBalance();
 
+            // Clear fields
+            this.setState({beneficiaryAddress: ''});
+            this.setState({amount: ''});
+            this.setState({delayInSeconds: ''});
             this.setState({ errorMessage: '' });
         }
         catch(err)
