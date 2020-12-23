@@ -44,7 +44,11 @@ class BeneficiaryRow extends Component {
                 <Table.Cell>{this.props.amount}</Table.Cell>
                 <Table.Cell>{this.props.disbursement}</Table.Cell>
                 <Table.Cell>
-                    <Button color='red' basic onClick={this.onClickRemove}>Remove</Button>
+                    <Button 
+                        loading={this.state.loading} 
+                        color='red' 
+                        basic 
+                        onClick={this.onClickRemove}>Remove</Button>
                 </Table.Cell> 
             </Table.Row>
         );        

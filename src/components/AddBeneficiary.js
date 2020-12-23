@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Button, Label, Header, Message } from 'semantic-ui-react';
+import { Input, Button, Label, Header, Message, Divider } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import web3 from '../web3';
 
@@ -93,7 +93,9 @@ class AddBeneficiary extends Component {
     render() {
         return (
             <div>
-                <Header size='medium'>Add Beneficiary</Header>
+                <Divider horizontal>
+                    <Header size='medium'>Step 2: Add Beneficiary</Header>
+                </Divider>
                 <Header sub>Use the form below to add beneficiaries that will receive funds after the disbursement date.  Beneficiaries can only be added by the owner of the funding account.</Header>
                 <br />
                 <Input label='Funding Address:' value={this.props.trustAddress} />
@@ -108,7 +110,7 @@ class AddBeneficiary extends Component {
                 <br /><br />
                 <Input label='Disbursement Date:' placeholder='01/30/2020' onChange={event => this.setState({delayInSeconds: event.target.value})} />
                 <br /><br />
-                <Label size='large'>Available Funds: {this.state.availableFunds} ETH</Label>
+                <Label size='large' color='teal'>Available Funds for Beneficiaries: {this.state.availableFunds} ETH</Label>
                 <br /><br />
                 {this.displayError()}
                 <Button loading={this.state.loading} primary onClick={this.onClickAdd}>Add</Button>

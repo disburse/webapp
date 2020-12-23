@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Input, Button, Label, Header, Message } from 'semantic-ui-react';
+import {Input, Button, Label, Header, Message, Divider } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import web3 from '../web3';
 
@@ -115,8 +115,10 @@ class FundAccount extends Component {
     render() {
         return (
             <div>
-                <Header size='medium'>Fund Account</Header>
-                <Header sub>Use the form below to deposit or withdraw funds available for future disbursement.</Header>
+                <Divider horizontal>
+                    <Header size='medium'>Step 1: Fund Account</Header>
+                </Divider>
+                <Header sub>Use the form below to deposit or withdraw funds.  Deposited funds will be available for disbursement to beneficiaries.</Header>
                 <br />
                 <Input label='Funding Address:' value={this.state.trustAddress} />
                 <br /><br />
@@ -126,7 +128,7 @@ class FundAccount extends Component {
                     <Label basic>ETH</Label>
                 </Input>
                 <br /><br />
-                <Label size='large'>Deposited Funds: {this.state.depositedFunds} ETH</Label>
+                <Label size='large' color='teal'>Deposited Funds: {this.state.depositedFunds} ETH</Label>
                 <br /><br />
                 {this.displayError()}
                 <Button loading={this.state.loading} primary onClick={this.onClickDeposit}>Deposit</Button>

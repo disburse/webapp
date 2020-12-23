@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { Grid, Container } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
-import Faq from './Faq';
 import DisburseHeader from './Header';
 import DisburseFooter from './Footer';
 import FundAccount from './FundAccount';
 import AddBeneficiary from './AddBeneficiary';
 import BeneficiaryList from './BeneficiaryList';
+import DisbursementList from './DisbursementList';
 
 class Disburse extends Component {
 
@@ -71,7 +71,10 @@ class Disburse extends Component {
                     </Grid.Row>
                     <Grid.Row>
                         <Grid.Column>
-                            <Faq />
+                            <DisbursementList 
+                                ref = "cDisbursementList"
+                                parentForceUpdate = {this.callbackUpdateAddBeneficiary} 
+                                trustAddress = {this.state.trustAddress} />
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>

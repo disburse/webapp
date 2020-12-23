@@ -1,54 +1,20 @@
 import React, { Component } from 'react';
-import { Header, Table, Label, Message, Divider } from 'semantic-ui-react';
+import { Header, Table, Message, Divider } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import web3 from '../web3';
-import BeneficiaryRow from './BeneficiaryRow';
+import DisbursementRow from './DisbursementRow';
 
 const DisburseJSON = require('../contracts/DisburseV1.json');
 
-class BeneficiaryList extends Component {
+class DisbursementList extends Component {
 
     state = {
-        contractAddress: '',
-        beneficiaryList: [],
-        renderRows: '',
-        allocatedFunds: '',
-        errorMessage: '',
-        loading: false
+        disbursementList: [],
+        errorMessage: ''
     } 
 
-    callbackUpdateTable = () => {        
-        console.log("PARENT BENEFICIARY LIST CALLED (callbackUpdateTable)");
-
-        // Row removed, re-rendering table of beneficiaries
-        this.componentDidMount();
-
-        // Call back parent component to update available funds (addBeneficiary)
-        this.props.parentForceUpdate();
-    }
-
-    callbackUpdateErrorMessage = () => {        
-        console.log("PARENT BENEFICIARY LIST CALLED (callbackUpdateErrorMessage)");
-    }
-
-    updateAllocatedFundsBalance = async () => {
-
-        if (this.props.trustAddress != null){
-
-            // Update allocated funds balance
-            const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
-            var weiBalance = await disburse.methods.getBeneficiaryBalance(this.props.trustAddress).call();
-
-            var etherBalance = 0;
-            if (weiBalance > 0){
-                etherBalance = web3.utils.fromWei(weiBalance, 'ether');
-            }
-            
-            this.setState({ allocatedFunds: etherBalance });
-        }
-    }
-
     componentDidMount = async () => {
+
         const networkId = await web3.eth.net.getId();  
         const contract = DisburseJSON.networks[networkId];
         this.setState({contractAddress: contract.address});
@@ -62,38 +28,37 @@ class BeneficiaryList extends Component {
             var complete = beneficiary['complete'];
             console.log('BENEFICIARY COMPLETE (id): ' + id + ' ' + complete);
 
-            if ((complete === false) && 
+            if ((complete === true) && 
                (beneficiary.beneficiaryAddress !== '0x0000000000000000000000000000000000000000')) {
+            
+                // TODO: Complete work on disbursement process
+                //var readyToDisburse = await disburse.methods.readyToDisburse(id).call({from: this.props.trustAddress});
+                //await disburse.methods.disburseFunds(id).send({from: this.props.trustAddress});
+
                 list.push(beneficiary);
             }
+    
         }
 
-        this.setState({beneficiaryList: list});
-
-        // Update allocated funds balance
-        this.updateAllocatedFundsBalance();
+        this.setState({disbursementList: list});
     }
     
     renderRows() {
         // Map is a function available on arrays
         // Item represents every element in the array, which in this scenario is a Struct
-        return this.state.beneficiaryList.map((item, index) => {
+        return this.state.disbursementList.map((item, index) => {
 
             var ethAmount = web3.utils.fromWei(item['amount'], 'ether');
             var formattedDate = item['disburseDate'];
 
             return( 
-                <BeneficiaryRow
-                        ref = "cBeneficiaryRow"
+                <DisbursementRow
+                        ref = "cDisbursementRow"
                         key = {index}
                         id = {item['id']}
                         address = {item['beneficiaryAddress']}
                         amount = {ethAmount}
                         disbursement = {formattedDate}
-                        contractAddress = {this.state.contractAddress}
-                        trustAddress = {this.props.trustAddress}
-                        parentCallback = {this.callbackUpdateTable}
-                        errorCallback = {this.callbackUpdateErrorMessage}
                 />
             );
         })
@@ -109,9 +74,9 @@ class BeneficiaryList extends Component {
         return (
             <div>
                 <Divider horizontal>
-                    <Header size='medium'>Step 3: Review Disbursements</Header>
+                    <Header size='medium'>Completed Disbursements</Header>
                 </Divider>
-                <Header sub>The table below lists all beneficiaries that will receive funds after their disbursement date.</Header>
+                <Header sub>The table below lists all disbursements that have already occurred.</Header>
                 {this.displayError()}
                 <br />
                 <Table>
@@ -121,18 +86,15 @@ class BeneficiaryList extends Component {
                             <Table.HeaderCell>Address</Table.HeaderCell>
                             <Table.HeaderCell>Amount (ETH)</Table.HeaderCell>
                             <Table.HeaderCell>Disbursement</Table.HeaderCell>
-                            <Table.HeaderCell>Remove</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
                         {this.renderRows()}
                     </Table.Body>
                 </Table>
-                <Label size='large' color='teal'>Allocated Funds to Beneficiaries: {this.state.allocatedFunds} ETH</Label>
-                <br />
             </div>
         );
     }
 }
 
-export default BeneficiaryList;
+export default DisbursementList;
