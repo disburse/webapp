@@ -43,17 +43,11 @@ class DisbursementList extends Component {
         // Item represents every element in the array, which in this scenario is a Struct
         return this.state.disbursementList.map((item, index) => {
 
-            var ethAmount = web3.utils.fromWei(item['amount'], 'ether');
-            var formattedDate = item['disburseDate'];
-
             return( 
                 <DisbursementRow
                         ref = "cDisbursementRow"
                         key = {index}
-                        id = {item['id']}
-                        address = {item['beneficiaryAddress']}
-                        amount = {ethAmount}
-                        disbursement = {formattedDate}
+                        beneficiary = {item}
                 />
             );
         })

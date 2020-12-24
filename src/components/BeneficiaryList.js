@@ -83,20 +83,12 @@ class BeneficiaryList extends Component {
         // Map is a function available on arrays
         // Item represents every element in the array, which in this scenario is a Struct
         return this.state.beneficiaryList.map((item, index) => {
-
-            var ethAmount = web3.utils.fromWei(item['amount'], 'ether');
-            var formattedDate = item['disburseDate'];
-
             return( 
                 <BeneficiaryRow
                         ref = "cBeneficiaryRow"
                         key = {index}
-                        id = {item['id']}
-                        address = {item['beneficiaryAddress']}
-                        amount = {ethAmount}
-                        disbursement = {formattedDate}
+                        beneficiary = {item}
                         contractAddress = {this.state.contractAddress}
-                        trustAddress = {this.props.trustAddress}
                         parentCallback = {this.callbackUpdateTable}
                         errorCallback = {this.callbackErrorReceived}
                 />
@@ -121,7 +113,7 @@ class BeneficiaryList extends Component {
                 <Divider horizontal>
                     <Header size='medium'>Step 3: Review Disbursements</Header>
                 </Divider>
-                <Header sub>The table below lists all beneficiaries that will receive funds after their disbursement date.</Header>
+                <Header sub>The table below lists all beneficiaries that will receive funds after their disbursement date.  Once the disbursement date has passed, the beneficiary cannot be removed.</Header>
                 {this.displayError()}
                 <br />
                 <Table>

@@ -7,6 +7,7 @@ const DisburseJSON = require('../contracts/DisburseV1.json');
 class BeneficiaryRow extends Component {
 
     state = {
+        readyToDisburse: false,
         errorMessage: '',
         loading: false
     } 
@@ -18,15 +19,17 @@ class BeneficiaryRow extends Component {
         this.setState({loading: true});
 
         try {
-            console.log("DISBURSE TO BENEFICIARY (id): " + this.props.id);
-            console.log("TRUST: " + this.props.trustAddress);
+            var beneficiaryId = this.props.beneficiary['id'];
+            var trustAddress = this.props.beneficiary['trustAddress'];
+
+            console.log("DISBURSE TO BENEFICIARY (id): " + beneficiaryId);
 
             const disburse = new web3.eth.Contract(DisburseJSON.abi, this.props.contractAddress);
             
-            var readyToDisburse = await disburse.methods.readyToDisburse(this.props.id).call({from: this.props.trustAddress});
+            var readyToDisburse = await disburse.methods.readyToDisburse(beneficiaryId).call({from: trustAddress});
             if (readyToDisburse){
-                console.log("DISBURSE INITIATED (id): " + this.props.id);
-                await disburse.methods.disburseFunds(this.props.id).send({from: this.props.trustAddress});
+                console.log("DISBURSE INITIATED (id): " + beneficiaryId);
+                await disburse.methods.disburseFunds(beneficiaryId).send({from: trustAddress});
                 this.props.parentCallback();
             }
             else{
@@ -50,12 +53,14 @@ class BeneficiaryRow extends Component {
         this.setState({loading: true});
 
         try {
-            console.log("REMOVE BENEFICIARY (id): " + this.props.id);
-            console.log("TRUST: " + this.props.trustAddress);
+            var beneficiaryId = this.props.beneficiary['id'];
+            var trustAddress = this.props.beneficiary['trustAddress'];
+
+            console.log("REMOVE BENEFICIARY (id): " + beneficiaryId);
 
             const disburse = new web3.eth.Contract(DisburseJSON.abi, this.props.contractAddress);
             
-            await disburse.methods.removeBeneficiary(this.props.id).send({from: this.props.trustAddress});
+            await disburse.methods.removeBeneficiary(beneficiaryId).send({from: trustAddress});
         
             this.props.parentCallback();
         }
@@ -68,19 +73,40 @@ class BeneficiaryRow extends Component {
         this.setState({loading: false}); 
     }
 
+    componentDidMount = async () => {
+        const networkId = await web3.eth.net.getId();  
+        const contract = DisburseJSON.networks[networkId];
+        this.setState({contractAddress: contract.address});
+
+        const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
+        var beneficiaryId = this.props.beneficiary['id'];
+        var trustAddress = this.props.beneficiary['trustAddress'];
+        var ready = await disburse.methods.readyToDisburse(beneficiaryId).call({from: trustAddress});
+        this.setState({readyToDisburse: ready});
+    }
+
     render() {
+
+        // Retrieve key variables from beneficiary
+        var beneficiaryId = this.props.beneficiary['id'];
+        var beneficiaryAddress = this.props.beneficiary['beneficiaryAddress'];
+        var beneficiaryAmount = this.props.beneficiary['amount'];
+        var beneficiaryDisbursement = this.props.beneficiary['disburseDate'];
+
         return (
             <Table.Row>
-                <Table.Cell>{this.props.id}</Table.Cell>
-                <Table.Cell>{this.props.address}</Table.Cell>
-                <Table.Cell>{this.props.amount}</Table.Cell>
-                <Table.Cell>{this.props.disbursement}</Table.Cell>
+                <Table.Cell>{beneficiaryId}</Table.Cell>
+                <Table.Cell>{beneficiaryAddress}</Table.Cell>
+                <Table.Cell>{web3.utils.fromWei(beneficiaryAmount, 'ether')}</Table.Cell>
+                <Table.Cell>{beneficiaryDisbursement}</Table.Cell>
                 <Table.Cell>
-                    <Button 
-                        loading={this.state.loading} 
-                        color='red' 
-                        basic 
-                        onClick={this.onClickRemove}>Remove</Button>
+                    {this.state.readyToDisburse ? null : (
+                        <Button 
+                            loading={this.state.loading} 
+                            color='red' 
+                            basic 
+                            onClick={this.onClickRemove}>Remove</Button>
+                    )}
                 </Table.Cell> 
                 <Table.Cell>
                     <Button 
