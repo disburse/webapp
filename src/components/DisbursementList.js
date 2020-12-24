@@ -26,15 +26,10 @@ class DisbursementList extends Component {
         for (var id=1; id<=topId; id++){
             var beneficiary = await disburse.methods.getBeneficiary(id).call({from: this.props.trustAddress});
             var complete = beneficiary['complete'];
-            console.log('BENEFICIARY COMPLETE (id): ' + id + ' ' + complete);
+            //console.log('BENEFICIARY COMPLETE (id): ' + id + ' ' + complete);
 
             if ((complete === true) && 
                (beneficiary.beneficiaryAddress !== '0x0000000000000000000000000000000000000000')) {
-            
-                // TODO: Complete work on disbursement process
-                //var readyToDisburse = await disburse.methods.readyToDisburse(id).call({from: this.props.trustAddress});
-                //await disburse.methods.disburseFunds(id).send({from: this.props.trustAddress});
-
                 list.push(beneficiary);
             }
     

@@ -11,6 +11,38 @@ class BeneficiaryRow extends Component {
         loading: false
     } 
 
+    onClickDisburse = async (event) => {
+
+        // This prevents form from being submitted to the server
+        event.preventDefault();
+        this.setState({loading: true});
+
+        try {
+            console.log("DISBURSE TO BENEFICIARY (id): " + this.props.id);
+            console.log("TRUST: " + this.props.trustAddress);
+
+            const disburse = new web3.eth.Contract(DisburseJSON.abi, this.props.contractAddress);
+            
+            var readyToDisburse = await disburse.methods.readyToDisburse(this.props.id).call({from: this.props.trustAddress});
+            if (readyToDisburse){
+                console.log("DISBURSE INITIATED (id): " + this.props.id);
+                await disburse.methods.disburseFunds(this.props.id).send({from: this.props.trustAddress});
+                this.props.parentCallback();
+            }
+            else{
+                this.setState({ errorMessage: 'Disbursement deadline has not passed yet.' });
+                this.props.errorCallback(this.state.errorMessage);
+            }
+        }
+        catch(err)
+        {
+            this.setState({ errorMessage: err.message });
+            this.props.errorCallback(this.state.errorMessage);
+        }
+
+        this.setState({loading: false}); 
+    }
+
     onClickRemove = async (event) => {
 
         // This prevents form from being submitted to the server
@@ -49,6 +81,13 @@ class BeneficiaryRow extends Component {
                         color='red' 
                         basic 
                         onClick={this.onClickRemove}>Remove</Button>
+                </Table.Cell> 
+                <Table.Cell>
+                    <Button 
+                        loading={this.state.loading} 
+                        color='teal' 
+                        basic 
+                        onClick={this.onClickDisburse}>Disburse</Button>
                 </Table.Cell> 
             </Table.Row>
         );        

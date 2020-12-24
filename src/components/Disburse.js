@@ -25,17 +25,21 @@ class Disburse extends Component {
         this.setState({trustAddress: address})
     }
 
-    callbackUpdateAddBeneficiary = () => {        
+    callbackUpdateAllComponents = () => {        
         console.log("PARENT FORCE UPDATE CALLED (UpdateAddBeneficiary)");
         
-        //this.refs.cAddBeneficiary.updateAvailableFundsBalance();
+        this.refs.cFundAccount.componentDidMount();
+        this.refs.cAddBeneficiary.componentDidMount();
+        this.refs.cDisbursementList.componentDidMount();
+    }
+
+    callbackUpdateAddBeneficiary = () => {        
+        console.log("PARENT FORCE UPDATE CALLED (UpdateAddBeneficiary)");        
         this.refs.cAddBeneficiary.componentDidMount();
     }
 
     callbackUpdateBeneficiaryList = () => {        
         console.log("PARENT FORCE UPDATE CALLED (UpdateBeneficiaryList)");
-        
-        //this.refs.cBeneficiaryList.updateAllocatedFundsBalance();
         this.refs.cBeneficiaryList.componentDidMount();
     }
 
@@ -65,15 +69,14 @@ class Disburse extends Component {
                         <Grid.Column>
                             <BeneficiaryList 
                                 ref = "cBeneficiaryList"
-                                parentForceUpdate = {this.callbackUpdateAddBeneficiary} 
+                                parentForceUpdate = {this.callbackUpdateAllComponents} 
                                 trustAddress = {this.state.trustAddress} />
                         </Grid.Column>
                     </Grid.Row>
-                    <Grid.Row>
+                    <Grid.Row> 
                         <Grid.Column>
                             <DisbursementList 
                                 ref = "cDisbursementList"
-                                parentForceUpdate = {this.callbackUpdateAddBeneficiary} 
                                 trustAddress = {this.state.trustAddress} />
                         </Grid.Column>
                     </Grid.Row>
