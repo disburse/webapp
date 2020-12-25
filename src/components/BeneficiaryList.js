@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Header, Table, Label, Message, Divider } from 'semantic-ui-react';
+import { Header, Table, Label, Message } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import web3 from '../web3';
 import BeneficiaryRow from './BeneficiaryRow';
@@ -110,17 +110,17 @@ class BeneficiaryList extends Component {
     render() {
         return (
             <div>
-                <Divider horizontal>
-                    <Header size='medium'>Step 3: Review Disbursements</Header>
-                </Divider>
-                <Header sub>The table below lists all beneficiaries that will receive funds after their disbursement date.  Once the disbursement date has passed, the beneficiary cannot be removed.</Header>
+                <Header sub>3. Below is a list of all beneficiaries that are eligible to receive funds after 
+                their disbursement date.  A beneficiary can be removed prior to their disbursement date.  Once 
+                the disbursement date has passed, the beneficiary can no longer be removed.  The disbursement owner
+                can optionally disburse the funds once the disbursement date has passed.</Header>
                 {this.displayError()}
                 <br />
                 <Table>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>ID</Table.HeaderCell>
-                            <Table.HeaderCell>Address</Table.HeaderCell>
+                            <Table.HeaderCell>Send To</Table.HeaderCell>
                             <Table.HeaderCell>Amount (ETH)</Table.HeaderCell>
                             <Table.HeaderCell>Disbursement</Table.HeaderCell>
                             <Table.HeaderCell>Remove</Table.HeaderCell>

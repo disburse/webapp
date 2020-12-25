@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Input, Button, Label, Header, Message, Divider } from 'semantic-ui-react';
+import {Input, Button, Label, Header, Message } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import web3 from '../web3';
 
@@ -115,10 +115,7 @@ class FundAccount extends Component {
     render() {
         return (
             <div>
-                <Divider horizontal>
-                    <Header size='medium'>Step 1: Fund Account</Header>
-                </Divider>
-                <Header sub>Use the form below to deposit or withdraw funds.  Deposited funds will be available for disbursement to beneficiaries.</Header>
+                <Header sub>1. Deposit or withdraw funds that will be available for disbursement to a beneficiary.</Header>
                 <br />
                 <Input label='Funding Address:' value={this.state.trustAddress} />
                 <br /><br />

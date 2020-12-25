@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Header, Table, Message, Divider } from 'semantic-ui-react';
+import { Header, Table, Message} from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import web3 from '../web3';
 import DisbursementRow from './DisbursementRow';
@@ -62,19 +62,17 @@ class DisbursementList extends Component {
     render() {
         return (
             <div>
-                <Divider horizontal>
-                    <Header size='medium'>Completed Disbursements</Header>
-                </Divider>
-                <Header sub>The table below lists all disbursements that have already occurred.</Header>
+                <Header sub>Below is a list of all incoming disbursements.  Click the Receive Button to process them and receive the funds back into your account/wallet.</Header>
                 {this.displayError()}
                 <br />
                 <Table>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>ID</Table.HeaderCell>
-                            <Table.HeaderCell>Address</Table.HeaderCell>
+                            <Table.HeaderCell>Sent From</Table.HeaderCell>
                             <Table.HeaderCell>Amount (ETH)</Table.HeaderCell>
                             <Table.HeaderCell>Disbursement</Table.HeaderCell>
+                            <Table.HeaderCell>Receive</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>

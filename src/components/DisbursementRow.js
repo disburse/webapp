@@ -1,10 +1,20 @@
 import React, { Component } from 'react';
-import { Table } from 'semantic-ui-react';
+import { Table, Button } from 'semantic-ui-react';
 import web3 from '../web3';
 
 class DisbursementRow extends Component {
 
-    // state = {} 
+    state = {
+        errorMessage: '',
+        loading: false
+    } 
+
+    componentDidMount = async () => {
+    }
+
+    onClickReceive = async (event) => {
+
+    }
 
     render() {
 
@@ -20,6 +30,13 @@ class DisbursementRow extends Component {
                 <Table.Cell>{beneficiaryAddress}</Table.Cell>
                 <Table.Cell>{web3.utils.fromWei(beneficiaryAmount, 'ether')}</Table.Cell>
                 <Table.Cell>{beneficiaryDisbursement}</Table.Cell>
+                <Table.Cell>
+                    <Button
+                        loading={this.state.loading} 
+                        color='teal'
+                        basic
+                        onClick={this.onClickReceive}>Receive</Button>
+                </Table.Cell>
             </Table.Row>
         );        
     }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Container } from 'semantic-ui-react';
+import { Grid, Container, Divider, Header } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import DisburseHeader from './Header';
 import DisburseFooter from './Footer';
@@ -49,6 +49,13 @@ class Disburse extends Component {
             <DisburseHeader />
             <Container style={{ marginTop: '4em' }}>
                 <Grid textAlign='left' columns={1}>
+                    <Grid.Column>
+                        <Divider horizontal>
+                            <Header size='medium'>Setup Outgoing Disbursement</Header>
+                        </Divider>
+                    </Grid.Column>
+                </Grid>
+                <Grid textAlign='left' columns={2}>
                     <Grid.Row>
                         <Grid.Column>
                             <FundAccount
@@ -56,15 +63,18 @@ class Disburse extends Component {
                                 parentForceUpdate = {this.callbackUpdateAddBeneficiary}  
                                 parentCallback = {this.callbackTrustAddress} /> 
                         </Grid.Column>
-                    </Grid.Row>
-                    <Grid.Row>
                         <Grid.Column>
                             <AddBeneficiary 
                                 ref = "cAddBeneficiary"
                                 parentForceUpdate = {this.callbackUpdateBeneficiaryList} 
-                                trustAddress = {this.state.trustAddress} />
+                                trustAddress = {this.state.trustAddress} />                            
                         </Grid.Column>
                     </Grid.Row>
+                </Grid>
+                <br />
+                <br />
+                <br />
+                <Grid textAlign='left' columns={1}>
                     <Grid.Row>
                         <Grid.Column>
                             <BeneficiaryList 
@@ -73,8 +83,17 @@ class Disburse extends Component {
                                 trustAddress = {this.state.trustAddress} />
                         </Grid.Column>
                     </Grid.Row>
+                </Grid>
+                <br />
+                <br />
+                <br />
+                <Grid textAlign='left' columns={1}>
                     <Grid.Row> 
                         <Grid.Column>
+                            <Divider horizontal>
+                                <Header size='medium'>Accept Incoming Disbursement</Header>
+                            </Divider>
+                            <br />
                             <DisbursementList 
                                 ref = "cDisbursementList"
                                 trustAddress = {this.state.trustAddress} />
