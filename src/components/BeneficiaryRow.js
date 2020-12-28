@@ -26,10 +26,10 @@ class BeneficiaryRow extends Component {
 
             const disburse = new web3.eth.Contract(DisburseJSON.abi, this.props.contractAddress);
             
-            var readyToDisburse = await disburse.methods.readyToDisburse(beneficiaryId).call({from: trustAddress});
+            var readyToDisburse = await disburse.methods.readyToDisburse(trustAddress, beneficiaryId).call({from: trustAddress});
             if (readyToDisburse){
                 console.log("DISBURSE INITIATED (id): " + beneficiaryId);
-                await disburse.methods.disburseFunds(beneficiaryId).send({from: trustAddress});
+                await disburse.methods.disburseFunds(trustAddress, beneficiaryId).send({from: trustAddress});
                 this.props.parentCallback();
             }
             else{
@@ -81,7 +81,7 @@ class BeneficiaryRow extends Component {
         const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
         var beneficiaryId = this.props.beneficiary['id'];
         var trustAddress = this.props.beneficiary['trustAddress'];
-        var ready = await disburse.methods.readyToDisburse(beneficiaryId).call({from: trustAddress});
+        var ready = await disburse.methods.readyToDisburse(trustAddress, beneficiaryId).call({from: trustAddress});
         this.setState({readyToDisburse: ready});
     }
 

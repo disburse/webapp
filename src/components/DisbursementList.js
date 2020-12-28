@@ -13,6 +13,24 @@ class DisbursementList extends Component {
         errorMessage: ''
     } 
 
+    constructor(props) {
+        super(props)
+
+        // When the callback is received from the BeneficiaryRow component, it is binded
+        // to the current instance of this component.  Otherwise, set state will not work.
+        this.callbackErrorReceived = this.callbackErrorReceived.bind(this)
+    }
+
+    callbackUpdateTable = () => {        
+        console.log("PARENT DISBURSEMENT LIST CALLED (callbackUpdateTable)");
+
+        // Row removed, re-rendering table of beneficiaries
+        this.componentDidMount();
+
+        // Call back parent component to update available funds (addBeneficiary)
+        this.props.parentForceUpdate();
+    }
+
     componentDidMount = async () => {
 
         const networkId = await web3.eth.net.getId();  
@@ -20,21 +38,28 @@ class DisbursementList extends Component {
         this.setState({contractAddress: contract.address});
 
         const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
-        var topId = await disburse.methods.getTopBeneficiaryId().call({from: this.props.trustAddress});
+
+        var beneficiaryAddress = this.props.trustAddress;
+        var topId = await disburse.methods.topDisbursementId(beneficiaryAddress).call();
 
         var list = [];
         for (var id=1; id<=topId; id++){
-            var beneficiary = await disburse.methods.getBeneficiary(id).call({from: this.props.trustAddress});
+
+            // Iterate through disburements and record the distribution ID
+            var disbursement = await disburse.methods.disbursements(this.props.trustAddress, id).call({from: this.props.trustAddress});
+            
+            var beneficiaryId = disbursement['beneficiaryId'];
+            var trustAddress = disbursement['trustAddress']
+            
+            var beneficiary = await disburse.methods.getBeneficiary(beneficiaryId).call({from: trustAddress});
             var complete = beneficiary['complete'];
-            //console.log('BENEFICIARY COMPLETE (id): ' + id + ' ' + complete);
 
-            if ((complete === true) && 
-               (beneficiary.beneficiaryAddress !== '0x0000000000000000000000000000000000000000')) {
-                list.push(beneficiary);
-            }
-    
+            if ((complete === false) && 
+                (beneficiary.beneficiaryAddress !== '0x0000000000000000000000000000000000000000')) {
+             list.push(beneficiary);
+         }
         }
-
+ 
         this.setState({disbursementList: list});
     }
     
@@ -48,12 +73,20 @@ class DisbursementList extends Component {
                         ref = "cDisbursementRow"
                         key = {index}
                         beneficiary = {item}
+                        contractAddress = {this.state.contractAddress}
+                        parentCallback = {this.callbackUpdateTable}
+                        errorCallback = {this.callbackErrorReceived}
                 />
             );
         })
     }
 
-    displayError() {       
+    callbackErrorReceived(err) {
+        console.log('ERROR RECEIVED: ' + err);
+        this.setState({errorMessage: err});
+    }
+
+    displayError() {     
         if (this.state.errorMessage.length > 0) {
             return (<Message error header="Oops!" content={this.state.errorMessage} />);
         }
@@ -72,7 +105,7 @@ class DisbursementList extends Component {
                             <Table.HeaderCell>Sent From</Table.HeaderCell>
                             <Table.HeaderCell>Amount (ETH)</Table.HeaderCell>
                             <Table.HeaderCell>Disbursement</Table.HeaderCell>
-                            <Table.HeaderCell>Receive</Table.HeaderCell>
+                            <Table.HeaderCell>Receive (ETH)</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>

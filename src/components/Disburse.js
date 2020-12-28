@@ -96,6 +96,7 @@ class Disburse extends Component {
                             <br />
                             <DisbursementList 
                                 ref = "cDisbursementList"
+                                parentForceUpdate = {this.callbackUpdateAllComponents} 
                                 trustAddress = {this.state.trustAddress} />
                         </Grid.Column>
                     </Grid.Row>
