@@ -12,6 +12,10 @@ To start react app with command: npm start
 3. For navigation install: 
     npm install --save react-router-dom
 
+FIX: When using react-router-dom and on localhost links worked fine, until I pushed my repo to github 
+and deployed it to netlify the links didn't work.  To correct this I adding a _redirect file inside public/ 
+folder and put /* /index.html 200 inside of that file.  Link navigation now works.
+
 An example of how navigation works can be found here:
     https://www.golangprograms.com/how-to-create-simple-react-router-to-navigate-multiple-pages.html
 
@@ -31,6 +35,8 @@ An example of how navigation works can be found here:
     cd client
     npm install    // Install dependencies
     npm start      // Test react app
+
+
 
 
 NOTES:

@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from "react-router-dom";
 import { Menu, Container } from 'semantic-ui-react';
 
 // Header & Footer
@@ -9,9 +10,12 @@ const DisburseHeader = () => (
     <div>
         <Menu fixed='top' inverted>
             <Container>
-                <Menu.Item as='a' header>Disburse.Finance</Menu.Item>
-                <Menu.Item as='a'>Home</Menu.Item>
-                <Menu.Item as='a'>About</Menu.Item>
+                <Link to='/'>
+                    <Menu.Item header>Disburse.Finance</Menu.Item>
+                </Link>
+                <Link to='/pay'>
+                    <Menu.Item>Launch App</Menu.Item>
+                </Link>         
             </Container>
         </Menu>
     </div>

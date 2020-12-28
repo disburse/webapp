@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Header, List, Segment, Container, Divider } from 'semantic-ui-react';
+import { Grid, Header, List, Segment, Container } from 'semantic-ui-react';
 
 // Header & Footer
 //https://react.semantic-ui.com/layouts/fixed-menu
@@ -11,35 +11,27 @@ const DisburseFooter = () => (
         <Container textAlign='center'>
             <Grid divided inverted stackable>
                 <Grid.Column width={3}>
-                <Header inverted as='h4' content='Group 1' />
+                <Header inverted as='h4' content='Developers' />
                 <List link inverted>
-                    <List.Item as='a'>Link One</List.Item>
-                    <List.Item as='a'>Link Two</List.Item>
-                    <List.Item as='a'>Link Three</List.Item>
+                    <a href="https://github.com/disburse">
+                        <List.Item as='a'>GitHub</List.Item>
+                    </a>
                 </List>
                 </Grid.Column>
                 <Grid.Column width={3}>
-                <Header inverted as='h4' content='Group 2' />
+                <Header inverted as='h4' content='Community' />
                 <List link inverted>
-                    <List.Item as='a'>Link One</List.Item>
-                    <List.Item as='a'>Link Two</List.Item>
-                    <List.Item as='a'>Link Three</List.Item>
+                    <a href="https://twitter.com/DisburseHQ">
+                        <List.Item as='a'>Twitter</List.Item>
+                    </a>
                 </List>
                 </Grid.Column>
                 <Grid.Column width={10}>
-                <Header inverted as='h4' content='Footer Header' />
-               <p>Extra space for a call to action inside the footer that could help re-engage users.</p>
+                <Header inverted as='h4' content='Disburse.Finance' />
+                    <p>The unstoppable way to guarantee future dated payments on ethereum!</p>
                 </Grid.Column>
             </Grid>
 
-            <Divider inverted section />
-
-            <List horizontal inverted divided link size='small'>
-                <List.Item as='a' href='#'>Site Map</List.Item>
-                <List.Item as='a' href='#'>Contact Us</List.Item>
-                <List.Item as='a' href='#'>Terms and Conditions</List.Item>
-                <List.Item as='a' href='#'>Privacy Policy</List.Item>
-            </List>
         </Container>
     </Segment>
 

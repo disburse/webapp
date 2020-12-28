@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Divider, Header } from 'semantic-ui-react';
+import { Grid, Header } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import FundAccount from './FundAccount';
 import AddBeneficiary from './AddBeneficiary';
@@ -44,11 +44,11 @@ class Disburse extends Component {
     render() {
         return (
         <div>
+            <br />
+            <br />
             <Grid textAlign='left' columns={1}>
-                <Grid.Column>
-                    <Divider horizontal>
-                        <Header size='medium'>Setup Future Dated Payment</Header>
-                    </Divider>
+                <Grid.Column>  
+                    <Header size='medium'>Setup Future Dated Payment</Header>
                 </Grid.Column>
             </Grid>
             <Grid textAlign='left' columns={2}>
@@ -86,9 +86,7 @@ class Disburse extends Component {
             <Grid textAlign='left' columns={1}>
                 <Grid.Row> 
                     <Grid.Column>
-                        <Divider horizontal>
-                            <Header size='medium'>Accept Incoming Payment</Header>
-                        </Divider>
+                        <Header size='medium'>Accept Incoming Payment</Header>
                         <br />
                         <DisbursementList 
                             ref = "cDisbursementList"

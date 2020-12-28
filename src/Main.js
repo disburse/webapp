@@ -3,17 +3,20 @@ import { Switch, Route } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 import DisburseHeader from './components/Header';
 import DisburseFooter from './components/Footer';
+import Home from './components/Home';
 import Disburse from './components/Disburse';
-import Faq from './components/Faq';
+import Error from './components/Error';
 
 const Main = () => {
   return (
     <div>
         <DisburseHeader />
             <Container style={{ marginTop: '4em' }}>
-                <Switch> {/* The Switch decides which component to show based on the current URL.*/}
-                    <Route exact path='/' component={Disburse}></Route>
-                    <Route exact path='/faq' component={Faq}></Route>
+                {/* The Switch decides which component to show based on the current URL.*/}
+                <Switch> 
+                    <Route exact path='/' component={Home}></Route>
+                    <Route exact path='/pay' component={Disburse}></Route>
+                    <Route component={Error}/>
                 </Switch>
             </Container>
         <DisburseFooter />
