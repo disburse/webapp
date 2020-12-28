@@ -115,7 +115,7 @@ class FundAccount extends Component {
     render() {
         return (
             <div>
-                <Header sub>1. Deposit or withdraw funds that will be available for disbursement to a beneficiary.</Header>
+                <Header sub>1. Deposit or withdraw funds that will be available for use in future dated payments.</Header>
                 <br />
                 <Input label='Funding Address:' value={this.state.trustAddress} />
                 <br /><br />

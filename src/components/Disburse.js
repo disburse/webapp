@@ -51,7 +51,7 @@ class Disburse extends Component {
                 <Grid textAlign='left' columns={1}>
                     <Grid.Column>
                         <Divider horizontal>
-                            <Header size='medium'>Setup Outgoing Disbursement</Header>
+                            <Header size='medium'>Setup Future Dated Payment</Header>
                         </Divider>
                     </Grid.Column>
                 </Grid>
@@ -91,7 +91,7 @@ class Disburse extends Component {
                     <Grid.Row> 
                         <Grid.Column>
                             <Divider horizontal>
-                                <Header size='medium'>Accept Incoming Disbursement</Header>
+                                <Header size='medium'>Accept Incoming Payment</Header>
                             </Divider>
                             <br />
                             <DisbursementList 

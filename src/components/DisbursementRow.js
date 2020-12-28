@@ -93,7 +93,7 @@ class DisbursementRow extends Component {
                             loading={this.state.loading} 
                             color='teal'
                             basic
-                            onClick={this.onClickReceive}>Receive</Button>
+                            onClick={this.onClickReceive}>Accept</Button>
                     )}    
                 </Table.Cell>
             </Table.Row>

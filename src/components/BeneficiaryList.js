@@ -110,20 +110,25 @@ class BeneficiaryList extends Component {
     render() {
         return (
             <div>
-                <Header sub>3. Below is a list of all beneficiaries that are eligible to receive funds after 
-                their disbursement date.  A beneficiary can be removed prior to their disbursement date.  Once 
-                the disbursement date has passed, the beneficiary can no longer be removed.  The disbursement owner
-                can optionally disburse the funds once the disbursement date has passed.</Header>
+                <Header sub>
+                    3. Below is a list of all addresses that will receive funds after 
+                    their payment date.  Future dated payments can be cancelled prior to their payment date.  Once 
+                    the payment date has passed, the payment can no longer be cancelled.  
+                </Header>
+                <Header sub>                      
+                    The receiving address can accept these payments from their account once the payment date has passed.
+                    Alternatively, the funding account can also send these funds once the payment date has passed.
+                </Header>
                 {this.displayError()}
                 <br />
                 <Table>
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell>Send To</Table.HeaderCell>
+                            <Table.HeaderCell>Receiving Address</Table.HeaderCell>
                             <Table.HeaderCell>Amount (ETH)</Table.HeaderCell>
-                            <Table.HeaderCell>Disbursement Date</Table.HeaderCell>
-                            <Table.HeaderCell>Remove Beneficiary</Table.HeaderCell>
-                            <Table.HeaderCell>Disburse Funds</Table.HeaderCell>
+                            <Table.HeaderCell>Payment Date</Table.HeaderCell>
+                            <Table.HeaderCell>Cancel Payment</Table.HeaderCell>
+                            <Table.HeaderCell>Send Payment</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>

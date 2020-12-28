@@ -97,7 +97,7 @@ class AddBeneficiary extends Component {
         */
         return (
             <div>
-                <Header sub>2. Add beneficiary that will receive funds after the disbursement date.</Header>
+                <Header sub>2. Add an address that will receive specified funds after the payment date.</Header>
                 <br />
                 <Input label='Receiving Address:' placeholder='0x...' onChange = {event => this.setState({beneficiaryAddress: event.target.value})} />
                 <br /><br />
@@ -107,7 +107,7 @@ class AddBeneficiary extends Component {
                     <Label basic>ETH</Label>
                 </Input>
                 <br /><br />
-                <Input label='Disbursement Date:' placeholder='01/30/2020' onChange={event => this.setState({delayInSeconds: event.target.value})} />
+                <Input label='Payment Date:' placeholder='01/30/2020' onChange={event => this.setState({delayInSeconds: event.target.value})} />
                 <br /><br />
                 <Label size='large' color='teal'>Available Funds for Beneficiaries: {this.state.availableFunds} ETH</Label>
                 <br /><br />

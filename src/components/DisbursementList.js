@@ -95,16 +95,16 @@ class DisbursementList extends Component {
     render() {
         return (
             <div>
-                <Header sub>Below is a list of all incoming disbursements.  Click the Receive Button to process them and receive the funds back into your account/wallet.</Header>
+                <Header sub>Below is a list of all incoming payments.  Click the Accept Button to send these funds to your private wallet.</Header>
                 {this.displayError()}
                 <br />
                 <Table>
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell>Sent From</Table.HeaderCell>
+                            <Table.HeaderCell>From Address</Table.HeaderCell>
                             <Table.HeaderCell>Amount (ETH)</Table.HeaderCell>
-                            <Table.HeaderCell>Disbursement Date</Table.HeaderCell>
-                            <Table.HeaderCell>Receive (ETH)</Table.HeaderCell>
+                            <Table.HeaderCell>Payment Date</Table.HeaderCell>
+                            <Table.HeaderCell>Accept Payment</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>

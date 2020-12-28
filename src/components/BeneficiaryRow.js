@@ -117,7 +117,7 @@ class BeneficiaryRow extends Component {
                             loading={this.state.loading} 
                             color='red' 
                             basic 
-                            onClick={this.onClickRemove}>Remove</Button>
+                            onClick={this.onClickRemove}>Cancel</Button>
                     )}
                 </Table.Cell> 
                 <Table.Cell>
@@ -125,7 +125,9 @@ class BeneficiaryRow extends Component {
                         loading={this.state.loading} 
                         color='teal' 
                         basic 
-                        onClick={this.onClickDisburse}>Disburse</Button>
+                        onClick={this.onClickDisburse}>
+                        &nbsp;&nbsp;&nbsp;Send&nbsp;&nbsp;&nbsp; 
+                    </Button>
                 </Table.Cell> 
             </Table.Row>
         );        
