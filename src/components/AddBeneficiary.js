@@ -109,7 +109,7 @@ class AddBeneficiary extends Component {
                 <br /><br />
                 <Input label='Payment Date:' placeholder='01/30/2020' onChange={event => this.setState({delayInSeconds: event.target.value})} />
                 <br /><br />
-                <Label size='large' color='teal'>Available Funds for Beneficiaries: {this.state.availableFunds} ETH</Label>
+                <Label size='large' color='teal'>Available Funds: {this.state.availableFunds} ETH</Label>
                 <br /><br />
                 {this.displayError()}
                 <Button loading={this.state.loading} primary onClick={this.onClickAdd}>Add</Button>

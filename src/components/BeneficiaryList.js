@@ -135,7 +135,7 @@ class BeneficiaryList extends Component {
                         {this.renderRows()}
                     </Table.Body>
                 </Table>
-                <Label size='large' color='teal'>Allocated Funds to Beneficiaries: {this.state.allocatedFunds} ETH</Label>
+                <Label size='large' color='teal'>Upcoming Payments: {this.state.allocatedFunds} ETH</Label>
                 <br />
             </div>
         );

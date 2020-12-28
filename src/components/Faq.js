@@ -1,5 +1,6 @@
 import React from 'react'
 import { Accordion, Header } from 'semantic-ui-react'
+import { Grid, Divider } from 'semantic-ui-react';
 
 const panels = [
   {
@@ -16,8 +17,14 @@ const panels = [
 
 const Faq = () => (
   <div>
-    <Header size='medium'>Frequently Asked Questions</Header>
-    <Accordion panels={panels} />
+      <Grid textAlign='left' columns={1}>
+          <Grid.Column>
+              <Divider horizontal>
+                <Header size='medium'>Frequently Asked Questions</Header>
+              </Divider>            
+              <Accordion panels={panels} />
+          </Grid.Column>
+      </Grid>
   </div>
 )
 

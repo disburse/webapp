@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import Disburse from './components/Disburse';
+//import Disburse from './components/Disburse';
 import './App.css';
+import Main from './Main'
 
 //import { BrowserRouter, Route, Switch } from 'react-router-dom';
 //import About from './components/About';
@@ -12,7 +13,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-          <Disburse />
+          <Main />
       </div>
     );
   }
