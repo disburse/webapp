@@ -119,12 +119,11 @@ class BeneficiaryList extends Component {
                 <Table>
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell>ID</Table.HeaderCell>
                             <Table.HeaderCell>Send To</Table.HeaderCell>
                             <Table.HeaderCell>Amount (ETH)</Table.HeaderCell>
-                            <Table.HeaderCell>Disbursement</Table.HeaderCell>
-                            <Table.HeaderCell>Remove</Table.HeaderCell>
-                            <Table.HeaderCell>Disburse</Table.HeaderCell>
+                            <Table.HeaderCell>Disbursement Date</Table.HeaderCell>
+                            <Table.HeaderCell>Remove Beneficiary</Table.HeaderCell>
+                            <Table.HeaderCell>Disburse Funds</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>

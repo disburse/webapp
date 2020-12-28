@@ -101,10 +101,9 @@ class DisbursementList extends Component {
                 <Table>
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell>ID</Table.HeaderCell>
                             <Table.HeaderCell>Sent From</Table.HeaderCell>
                             <Table.HeaderCell>Amount (ETH)</Table.HeaderCell>
-                            <Table.HeaderCell>Disbursement</Table.HeaderCell>
+                            <Table.HeaderCell>Disbursement Date</Table.HeaderCell>
                             <Table.HeaderCell>Receive (ETH)</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>

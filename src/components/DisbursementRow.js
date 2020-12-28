@@ -60,20 +60,33 @@ class DisbursementRow extends Component {
         this.setState({loading: false}); 
     }
 
+    timeConverter = () => {
+        var unix_timestamp = this.props.beneficiary['disburseDate'];
+        var a = new Date(unix_timestamp * 1000);
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        var year = a.getFullYear();
+        var month = months[a.getMonth()];
+        var date = a.getDate();
+        var hour = a.getHours();
+        var min = a.getMinutes();
+        var sec = a.getSeconds();
+        var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+        return time;
+    }
+
     render() {
 
         // Retrieve key variables from beneficiary    
-        var beneficiaryId = this.props.beneficiary['id'];
+        // var beneficiaryId = this.props.beneficiary['id'];
         var trustAddress = this.props.beneficiary['trustAddress'];
         var beneficiaryAmount = this.props.beneficiary['amount'];
-        var beneficiaryDisbursement = this.props.beneficiary['disburseDate'];
+        //var beneficiaryDisbursement = this.props.beneficiary['disburseDate'];
     
         return (
             <Table.Row>
-                <Table.Cell>{beneficiaryId}</Table.Cell>
                 <Table.Cell>{trustAddress}</Table.Cell>
                 <Table.Cell>{web3.utils.fromWei(beneficiaryAmount, 'ether')}</Table.Cell>
-                <Table.Cell>{beneficiaryDisbursement}</Table.Cell>
+                <Table.Cell>{this.timeConverter()}</Table.Cell>
                 <Table.Cell>
                     {!this.state.readyToDisburse ? 'Please wait for disbursement date.' : (
                         <Button
