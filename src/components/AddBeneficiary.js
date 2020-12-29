@@ -2,13 +2,11 @@ import React, { Component } from 'react';
 import { Input, Button, Label, Header, Message } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import web3 from '../web3';
-
-const DisburseJSON = require('../contracts/DisburseV1.json');
+import contract from '../contracts';
 
 class AddBeneficiary extends Component {
 
     state = {
-        contractAddress: '',
         beneficiaryAddress: '',
         amount: '',
         delayInSeconds: '',
@@ -22,7 +20,8 @@ class AddBeneficiary extends Component {
         if (this.props.trustAddress != null){
 
             // Update allocated funds balance
-            const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
+            const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
+            
             var trustBalance = await disburse.methods.getTrustBalance(this.props.trustAddress).call();        
             var allocatedBalance = await disburse.methods.getBeneficiaryBalance(this.props.trustAddress).call();
         
@@ -39,10 +38,12 @@ class AddBeneficiary extends Component {
         }
     }
 
+    
     componentDidMount = async () => {
-        const networkId = await web3.eth.net.getId();  
-        const contract = DisburseJSON.networks[networkId];
-        this.setState({contractAddress: contract.address});
+
+        // Removing this line cause the form to not load
+        await web3.eth.net.getId();  
+
         this.updateAvailableFundsBalance();
     }
 
@@ -55,7 +56,7 @@ class AddBeneficiary extends Component {
         try {
             console.log("START ADD BENEFICIARY");
 
-            const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
+            const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
             var weiAmount = web3.utils.toWei(this.state.amount, 'ether');    
             console.log("ADD: "+this.state.beneficiaryAddress);
             console.log("DELAY: "+this.state.delayInSeconds);

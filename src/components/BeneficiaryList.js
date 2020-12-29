@@ -2,14 +2,12 @@ import React, { Component } from 'react';
 import { Header, Table, Label, Message } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import web3 from '../web3';
+import contract from '../contracts';
 import BeneficiaryRow from './BeneficiaryRow';
-
-const DisburseJSON = require('../contracts/DisburseV1.json');
 
 class BeneficiaryList extends Component {
 
     state = {
-        contractAddress: '',
         beneficiaryList: [],
         renderRows: '',
         allocatedFunds: '',
@@ -40,7 +38,8 @@ class BeneficiaryList extends Component {
         if (this.props.trustAddress != null){
 
             // Update allocated funds balance
-            const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
+            const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
+
             var weiBalance = await disburse.methods.getBeneficiaryBalance(this.props.trustAddress).call();
 
             var etherBalance = 0;
@@ -53,11 +52,10 @@ class BeneficiaryList extends Component {
     }
 
     componentDidMount = async () => {
-        const networkId = await web3.eth.net.getId();  
-        const contract = DisburseJSON.networks[networkId];
-        this.setState({contractAddress: contract.address});
+        
+        await web3.eth.net.getId();  
 
-        const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
+        const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
         var topId = await disburse.methods.getTopBeneficiaryId().call({from: this.props.trustAddress});
 
         var list = [];
@@ -88,7 +86,6 @@ class BeneficiaryList extends Component {
                         ref = "cBeneficiaryRow"
                         key = {index}
                         beneficiary = {item}
-                        contractAddress = {this.state.contractAddress}
                         parentCallback = {this.callbackUpdateTable}
                         errorCallback = {this.callbackErrorReceived}
                 />

@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { Header, Table, Message} from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import web3 from '../web3';
+import contract from '../contracts';
 import DisbursementRow from './DisbursementRow';
-
-const DisburseJSON = require('../contracts/DisburseV1.json');
 
 class DisbursementList extends Component {
 
@@ -33,11 +32,9 @@ class DisbursementList extends Component {
 
     componentDidMount = async () => {
 
-        const networkId = await web3.eth.net.getId();  
-        const contract = DisburseJSON.networks[networkId];
-        this.setState({contractAddress: contract.address});
-
-        const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
+        await web3.eth.net.getId();  
+        
+        const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
 
         var beneficiaryAddress = this.props.trustAddress;
         var topId = await disburse.methods.topDisbursementId(beneficiaryAddress).call();
@@ -73,7 +70,6 @@ class DisbursementList extends Component {
                         ref = "cDisbursementRow"
                         key = {index}
                         beneficiary = {item}
-                        contractAddress = {this.state.contractAddress}
                         parentCallback = {this.callbackUpdateTable}
                         errorCallback = {this.callbackErrorReceived}
                 />

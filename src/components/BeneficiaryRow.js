@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Table, Button } from 'semantic-ui-react';
 import web3 from '../web3';
-
-const DisburseJSON = require('../contracts/DisburseV1.json');
+import contract from '../contracts';
 
 class BeneficiaryRow extends Component {
 
@@ -24,7 +23,7 @@ class BeneficiaryRow extends Component {
 
             console.log("DISBURSE TO BENEFICIARY (id): " + beneficiaryId);
 
-            const disburse = new web3.eth.Contract(DisburseJSON.abi, this.props.contractAddress);
+            const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
             
             var readyToDisburse = await disburse.methods.readyToDisburse(trustAddress, beneficiaryId).call({from: trustAddress});
             if (readyToDisburse){
@@ -58,7 +57,7 @@ class BeneficiaryRow extends Component {
 
             console.log("REMOVE BENEFICIARY (id): " + beneficiaryId);
 
-            const disburse = new web3.eth.Contract(DisburseJSON.abi, this.props.contractAddress);
+            const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
             
             await disburse.methods.removeBeneficiary(beneficiaryId).send({from: trustAddress});
         
@@ -74,11 +73,9 @@ class BeneficiaryRow extends Component {
     }
 
     componentDidMount = async () => {
-        const networkId = await web3.eth.net.getId();  
-        const contract = DisburseJSON.networks[networkId];
-        this.setState({contractAddress: contract.address});
-
-        const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
+        await web3.eth.net.getId();  
+        
+        const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
         var beneficiaryId = this.props.beneficiary['id'];
         var trustAddress = this.props.beneficiary['trustAddress'];
         var ready = await disburse.methods.readyToDisburse(trustAddress, beneficiaryId).call({from: trustAddress});

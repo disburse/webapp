@@ -2,13 +2,11 @@ import React, { Component } from 'react';
 import {Input, Button, Label, Header, Message } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import web3 from '../web3';
-
-const DisburseJSON = require('../contracts/DisburseV1.json');
+import contract from '../contracts';
 
 class FundAccount extends Component {
 
     state = {
-        contractAddress: '',
         trustAddress: '',
         amount: '',
         depositedFunds: '',
@@ -20,7 +18,8 @@ class FundAccount extends Component {
 
         if (this.state.trustAddress != null){
                 
-            const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
+            const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
+
             var weiBalance = await disburse.methods.getTrustBalance(this.state.trustAddress).call();
             
             var etherBalance = 0;
@@ -42,10 +41,6 @@ class FundAccount extends Component {
         // Pass the trust address back to the parent component
         this.props.parentCallback(this.state.trustAddress);
 
-        const networkId = await web3.eth.net.getId();  
-        const contract = DisburseJSON.networks[networkId];
-        this.setState({contractAddress: contract.address});
-
         this.updateDepositedFundsBalance();
     }
 
@@ -59,7 +54,8 @@ class FundAccount extends Component {
         try {
             console.log("START DEPOSIT");
             var weiAmount = web3.utils.toWei(this.state.amount, 'ether');
-            const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
+            const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
+            
             await disburse.methods.contributeToTrust().send({ from: this.state.trustAddress, value: weiAmount });
 
             this.updateDepositedFundsBalance();
@@ -86,7 +82,7 @@ class FundAccount extends Component {
 
         try {
             console.log("START WITHRAW");
-            const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
+            const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
             var weiAmount = web3.utils.toWei(this.state.amount, 'ether');
             await disburse.methods.withdrawAmountFromTrustBalance(weiAmount).send({from: this.state.trustAddress});
             
