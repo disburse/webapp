@@ -1,43 +1,25 @@
 import React, { Component } from 'react';
-//import Disburse from './components/Disburse';
+import { Switch, Route } from 'react-router-dom';
 import './App.css';
-import Main from './Main'
-
-//import { BrowserRouter, Route, Switch } from 'react-router-dom';
-//import About from './components/About';
-//import Error from './components/Error';
-//import Navigation from './components/Navigation';
-//import Recovery from './components/Recovery';
+import HomepageLayout from './components/HomepageLayout';
+import Disburse from './components/Disburse';
+import Error from './components/Error';
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-          <Main />
+        
+        {/* The Switch decides which component to show based on the current URL.*/}
+        <Switch> 
+            <Route exact path='/' component={HomepageLayout}></Route>
+            <Route exact path='/pay' component={Disburse}></Route>
+            <Route component={Error}/>
+        </Switch>
+        
       </div>
     );
   }
 }
 
 export default App;
-
-  /*
-  render() {
-    return (
-      <BrowserRouter>
-        <div className="App">
-          <h2> Disburse.Finance </h2>
-
-          <Navigation />
-            <Switch>
-              <Route path="/" component={Disburse} exact/>
-              <Route path="/recovery" component={Recovery}/>
-              <Route path="/about" component={About}/>
-              <Route component={Error}/>
-            </Switch>
-            
-        </div>
-      </BrowserRouter>
-    );
-  }
-  */

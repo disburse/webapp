@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Grid, Header } from 'semantic-ui-react';
+import { Grid, Header, Container } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import FundAccount from './FundAccount';
 import AddBeneficiary from './AddBeneficiary';
 import BeneficiaryList from './BeneficiaryList';
 import DisbursementList from './DisbursementList';
+import DisburseHeader from './Header';
+import DisburseFooter from './Footer';
 
 class Disburse extends Component {
 
@@ -44,6 +46,8 @@ class Disburse extends Component {
     render() {
         return (
         <div>
+            <DisburseHeader />
+            <Container style={{ marginTop: '4em' }}>
             <br />
             <br />
             <Grid textAlign='left' columns={1}>
@@ -95,6 +99,8 @@ class Disburse extends Component {
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
+            </Container>
+            <DisburseFooter />
         </div>
         );
     }

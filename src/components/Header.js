@@ -13,9 +13,6 @@ const DisburseHeader = () => (
                 <Link to='/'>
                     <Menu.Item header>Disburse.Finance</Menu.Item>
                 </Link>
-                <Link to='/pay'>
-                    <Menu.Item>Launch App</Menu.Item>
-                </Link>         
             </Container>
         </Menu>
     </div>
