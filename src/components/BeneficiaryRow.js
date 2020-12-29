@@ -22,13 +22,11 @@ class BeneficiaryRow extends Component {
             var trustAddress = this.props.beneficiary['trustAddress'];
 
             console.log("DISBURSE TO BENEFICIARY (id): " + beneficiaryId);
-
-            const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
-            
-            var readyToDisburse = await disburse.methods.readyToDisburse(trustAddress, beneficiaryId).call({from: trustAddress});
+        
+            var readyToDisburse = await contract.DISBURSE.methods.readyToDisburse(trustAddress, beneficiaryId).call({from: trustAddress});
             if (readyToDisburse){
                 console.log("DISBURSE INITIATED (id): " + beneficiaryId);
-                await disburse.methods.disburseFunds(trustAddress, beneficiaryId).send({from: trustAddress});
+                await contract.DISBURSE.methods.disburseFunds(trustAddress, beneficiaryId).send({from: trustAddress});
                 this.props.parentCallback();
             }
             else{
@@ -56,10 +54,8 @@ class BeneficiaryRow extends Component {
             var trustAddress = this.props.beneficiary['trustAddress'];
 
             console.log("REMOVE BENEFICIARY (id): " + beneficiaryId);
-
-            const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
-            
-            await disburse.methods.removeBeneficiary(beneficiaryId).send({from: trustAddress});
+           
+            await contract.DISBURSE.methods.removeBeneficiary(beneficiaryId).send({from: trustAddress});
         
             this.props.parentCallback();
         }
@@ -75,10 +71,9 @@ class BeneficiaryRow extends Component {
     componentDidMount = async () => {
         await web3.eth.net.getId();  
         
-        const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
         var beneficiaryId = this.props.beneficiary['id'];
         var trustAddress = this.props.beneficiary['trustAddress'];
-        var ready = await disburse.methods.readyToDisburse(trustAddress, beneficiaryId).call({from: trustAddress});
+        var ready = await contract.DISBURSE.methods.readyToDisburse(trustAddress, beneficiaryId).call({from: trustAddress});
         this.setState({readyToDisburse: ready});
     }
 

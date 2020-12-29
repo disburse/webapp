@@ -17,10 +17,8 @@ class FundAccount extends Component {
     updateDepositedFundsBalance = async () => {
 
         if (this.state.trustAddress != null){
-                
-            const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
-
-            var weiBalance = await disburse.methods.getTrustBalance(this.state.trustAddress).call();
+            
+            var weiBalance = await contract.DISBURSE.methods.getTrustBalance(this.state.trustAddress).call();
             
             var etherBalance = 0;
             if (weiBalance > 0){
@@ -54,9 +52,8 @@ class FundAccount extends Component {
         try {
             console.log("START DEPOSIT");
             var weiAmount = web3.utils.toWei(this.state.amount, 'ether');
-            const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
             
-            await disburse.methods.contributeToTrust().send({ from: this.state.trustAddress, value: weiAmount });
+            await contract.DISBURSE.methods.contributeToTrust().send({ from: this.state.trustAddress, value: weiAmount });
 
             this.updateDepositedFundsBalance();
 
@@ -82,9 +79,8 @@ class FundAccount extends Component {
 
         try {
             console.log("START WITHRAW");
-            const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
             var weiAmount = web3.utils.toWei(this.state.amount, 'ether');
-            await disburse.methods.withdrawAmountFromTrustBalance(weiAmount).send({from: this.state.trustAddress});
+            await contract.DISBURSE.methods.withdrawAmountFromTrustBalance(weiAmount).send({from: this.state.trustAddress});
             
             this.updateDepositedFundsBalance();
 

@@ -33,22 +33,20 @@ class DisbursementList extends Component {
     componentDidMount = async () => {
 
         await web3.eth.net.getId();  
-        
-        const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
 
         var beneficiaryAddress = this.props.trustAddress;
-        var topId = await disburse.methods.topDisbursementId(beneficiaryAddress).call();
+        var topId = await contract.DISBURSE.methods.topDisbursementId(beneficiaryAddress).call();
 
         var list = [];
         for (var id=1; id<=topId; id++){
 
             // Iterate through disburements and record the distribution ID
-            var disbursement = await disburse.methods.disbursements(this.props.trustAddress, id).call({from: this.props.trustAddress});
+            var disbursement = await contract.DISBURSE.methods.disbursements(this.props.trustAddress, id).call({from: this.props.trustAddress});
             
             var beneficiaryId = disbursement['beneficiaryId'];
             var trustAddress = disbursement['trustAddress']
             
-            var beneficiary = await disburse.methods.getBeneficiary(beneficiaryId).call({from: trustAddress});
+            var beneficiary = await contract.DISBURSE.methods.getBeneficiary(beneficiaryId).call({from: trustAddress});
             var complete = beneficiary['complete'];
 
             if ((complete === false) && 

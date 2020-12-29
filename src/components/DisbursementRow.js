@@ -14,10 +14,9 @@ class DisbursementRow extends Component {
     componentDidMount = async () => {
         await web3.eth.net.getId();  
         
-        const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
         var beneficiaryId = this.props.beneficiary['id'];
         var trustAddress = this.props.beneficiary['trustAddress'];
-        var ready = await disburse.methods.readyToDisburse(trustAddress, beneficiaryId).call({from: trustAddress});
+        var ready = await contract.DISBURSE.methods.readyToDisburse(trustAddress, beneficiaryId).call({from: trustAddress});
         this.setState({readyToDisburse: ready});
     }
 
@@ -33,18 +32,16 @@ class DisbursementRow extends Component {
             var beneficiaryAddress = this.props.beneficiary['beneficiaryAddress'];
 
             console.log("DISBURSE TO BENEFICIARY (id): " + beneficiaryId);
-
-            const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
             
-            var readyToDisburse = await disburse.methods.readyToDisburse(trustAddress, beneficiaryId).call({from: trustAddress});
+            var readyToDisburse = await contract.DISBURSE.methods.readyToDisburse(trustAddress, beneficiaryId).call({from: trustAddress});
             if (readyToDisburse){
                 console.log("DISBURSE INITIATED (id): " + beneficiaryId);
                 console.log("DISBURSE INITIATED (address): " + beneficiaryAddress);
-                await disburse.methods.disburseFunds(trustAddress, beneficiaryId).send({from: beneficiaryAddress});
+                await contract.DISBURSE.methods.disburseFunds(trustAddress, beneficiaryId).send({from: beneficiaryAddress});
                 this.props.parentCallback();
             }
             else{
-                this.setState({ errorMessage: 'Disbursement deadline has not passed yet.' });
+                this.setState({ errorMessage: 'Payment deadline has not passed yet.' });
                 this.props.errorCallback(this.state.errorMessage);
             }
         }
@@ -85,7 +82,7 @@ class DisbursementRow extends Component {
                 <Table.Cell>{web3.utils.fromWei(beneficiaryAmount, 'ether')}</Table.Cell>
                 <Table.Cell>{this.timeConverter()}</Table.Cell>
                 <Table.Cell>
-                    {!this.state.readyToDisburse ? 'Please wait for disbursement date.' : (
+                    {!this.state.readyToDisburse ? 'Please wait for payment date.' : (
                         <Button
                             loading={this.state.loading} 
                             color='teal'

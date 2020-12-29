@@ -1,33 +1,38 @@
 import web3 from './web3';
-
 const DISBURSEV1_JSON = require('./contracts/DisburseV1.json');
 const DISBURSEV1GOERLI_JSON = require('./contracts/DisburseV1Goerli.json');
-var CONTRACT_ADDRESS;
-var ABI;
+let CONTRACT_ADDRESS;
+let ABI;
+let NETWORK_ID = '5777';
+let DISBURSE;
 
-const network = 'localhost';
-//const network = 'goerli';
-var networkId = '5777';
+// The await operator is used to wait for a Promise. It can be used inside an Async block only. 
+// The keyword Await makes JavaScript wait until the promise returns a result. It has to be noted 
+// that it only makes the async function block wait and **NOT** the whole program execution.
 
 var getNetworkId = async () => {
-    networkId = await web3.eth.net.getId();  
+    NETWORK_ID = await web3.eth.net.getId();  
+    console.log('RETREIVED NETWORK ID: ' + NETWORK_ID);
+    return NETWORK_ID;
 }
 
+// This is an asynchronous function, therefore execution will continue *before* the function completes.
+// getNetworkId is a promise
 getNetworkId();
 
-if (network === 'localhost'){
+console.log('DEFAULT NETWORK ID: ' + NETWORK_ID);
+
+// Localhost
+if (NETWORK_ID === '5777'){
     ABI = DISBURSEV1_JSON.abi;
-    CONTRACT_ADDRESS = DISBURSEV1_JSON.networks[networkId].address;
+    CONTRACT_ADDRESS = DISBURSEV1_JSON.networks[NETWORK_ID].address;
 }
-else if (network === 'goerli') {
+// Goerli
+else if (NETWORK_ID === '5') {
     ABI = DISBURSEV1GOERLI_JSON;
     CONTRACT_ADDRESS = '0x9102994DC42CFF82D60BeCe90d31B8d409Afcbd3';
 }
 
-console.log('CONTRACT ADDRESS: ' + CONTRACT_ADDRESS);
+DISBURSE = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
 
-export default { ABI, CONTRACT_ADDRESS };
-
-
-// const disburse = new web3.eth.Contract(DisburseJSON.abi, this.state.contractAddress);
-// const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
+export default { DISBURSE };

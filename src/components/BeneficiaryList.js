@@ -38,9 +38,7 @@ class BeneficiaryList extends Component {
         if (this.props.trustAddress != null){
 
             // Update allocated funds balance
-            const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
-
-            var weiBalance = await disburse.methods.getBeneficiaryBalance(this.props.trustAddress).call();
+            var weiBalance = await contract.DISBURSE.methods.getBeneficiaryBalance(this.props.trustAddress).call();
 
             var etherBalance = 0;
             if (weiBalance > 0){
@@ -54,13 +52,12 @@ class BeneficiaryList extends Component {
     componentDidMount = async () => {
         
         await web3.eth.net.getId();  
-
-        const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
-        var topId = await disburse.methods.getTopBeneficiaryId().call({from: this.props.trustAddress});
+        
+        var topId = await contract.DISBURSE.methods.getTopBeneficiaryId().call({from: this.props.trustAddress});
 
         var list = [];
         for (var id=1; id<=topId; id++){
-            var beneficiary = await disburse.methods.getBeneficiary(id).call({from: this.props.trustAddress});
+            var beneficiary = await contract.DISBURSE.methods.getBeneficiary(id).call({from: this.props.trustAddress});
             var complete = beneficiary['complete'];
             //console.log('BENEFICIARY COMPLETE (id): ' + id + ' ' + complete);
 

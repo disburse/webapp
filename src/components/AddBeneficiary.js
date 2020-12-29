@@ -20,10 +20,8 @@ class AddBeneficiary extends Component {
         if (this.props.trustAddress != null){
 
             // Update allocated funds balance
-            const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
-            
-            var trustBalance = await disburse.methods.getTrustBalance(this.props.trustAddress).call();        
-            var allocatedBalance = await disburse.methods.getBeneficiaryBalance(this.props.trustAddress).call();
+            var trustBalance = await contract.DISBURSE.methods.getTrustBalance(this.props.trustAddress).call();
+            var allocatedBalance = await contract.DISBURSE.methods.getBeneficiaryBalance(this.props.trustAddress).call();
         
             var weiBalance = 0;
             if (trustBalance >= 0 && allocatedBalance >= 0){
@@ -56,12 +54,11 @@ class AddBeneficiary extends Component {
         try {
             console.log("START ADD BENEFICIARY");
 
-            const disburse = new web3.eth.Contract(contract.ABI, contract.CONTRACT_ADDRESS);
             var weiAmount = web3.utils.toWei(this.state.amount, 'ether');    
             console.log("ADD: "+this.state.beneficiaryAddress);
             console.log("DELAY: "+this.state.delayInSeconds);
             console.log("AMT: "+weiAmount);       
-            await disburse.methods.addBeneficiarySeconds(
+            await contract.DISBURSE.methods.addBeneficiarySeconds(
                                     this.state.beneficiaryAddress, 
                                     this.state.delayInSeconds, 
                                     weiAmount)
