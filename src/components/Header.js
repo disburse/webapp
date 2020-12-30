@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from "react-router-dom";
-import { Menu, Container } from 'semantic-ui-react';
+import { Menu, Container, Image } from 'semantic-ui-react';
+const logo = require('../images/pigeon.png');
 
 // Header & Footer
 //https://react.semantic-ui.com/layouts/fixed-menu
@@ -11,7 +12,10 @@ const DisburseHeader = () => (
         <Menu fixed='top' inverted>
             <Container>
                 <Link to='/'>
-                    <Menu.Item header>Disburse</Menu.Item>
+                    <Menu.Item header>
+                        <Image size='mini' src={logo} style={{ marginRight: '1.5em' }} />
+                        Disburse
+                    </Menu.Item>
                 </Link>
             </Container>
         </Menu>

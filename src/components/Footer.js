@@ -1,5 +1,6 @@
 import React from 'react'
-import { Grid, Header, List, Segment, Container } from 'semantic-ui-react';
+import { Grid, Header, List, Segment, Container, Divider, Image } from 'semantic-ui-react';
+const logo = require('../images/pigeon.png');
 
 // Header & Footer
 //https://react.semantic-ui.com/layouts/fixed-menu
@@ -31,6 +32,9 @@ const DisburseFooter = () => (
                     <p>The unstoppable way to guarantee future dated payments on ethereum!</p>
                 </Grid.Column>
             </Grid>
+
+            <Divider inverted section />
+            <Image centered size='mini' src={logo} />
 
         </Container>
     </Segment>

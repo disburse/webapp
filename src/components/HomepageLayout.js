@@ -11,6 +11,7 @@ import {
   Grid,
   Header,
   Icon,
+  Image,
   List,
   Menu,
   Segment,
@@ -18,6 +19,8 @@ import {
   Visibility
 } from 'semantic-ui-react'
 import { Link } from "react-router-dom";
+
+const logo = require('../images/pigeon.png');
 
 const { MediaContextProvider, Media } = createMedia({
   breakpoints: {
@@ -59,7 +62,7 @@ const HomepageHeading = ({ mobile }) => (
         Get Started
         <Icon name='right arrow' />
         </Button>
-    </Link>
+    </Link>    
   </Container>
 )
 
@@ -280,6 +283,10 @@ const HomepageLayout = () => (
             </Grid.Column>
           </Grid.Row>
         </Grid>
+
+        <Divider inverted section />
+        <Image centered size='mini' src={logo} />
+
       </Container>
     </Segment>
   </ResponsiveContainer>
