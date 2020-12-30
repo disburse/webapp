@@ -10,6 +10,7 @@ class AddBeneficiary extends Component {
         beneficiaryAddress: '',
         amount: '',
         delayInSeconds: '',
+        cancelAllowed: false,
         availableFunds: '',
         errorMessage: '',
         loading: false
@@ -55,13 +56,16 @@ class AddBeneficiary extends Component {
             console.log("START ADD BENEFICIARY");
 
             var weiAmount = web3.utils.toWei(this.state.amount, 'ether');    
-            console.log("ADD: "+this.state.beneficiaryAddress);
-            console.log("DELAY: "+this.state.delayInSeconds);
-            console.log("AMT: "+weiAmount);       
+            console.log("ADD: " + this.state.beneficiaryAddress);
+            console.log("DELAY: " + this.state.delayInSeconds);
+            console.log("AMT: " + weiAmount);  
+            console.log("CANCEL ALLOWED: " + this.state.cancelAllowed);
+            
             await contract.DISBURSE.methods.addBeneficiarySeconds(
                                     this.state.beneficiaryAddress, 
                                     this.state.delayInSeconds, 
-                                    weiAmount)
+                                    weiAmount,
+                                    this.state.cancelAllowed)
                                 .send({from: this.props.trustAddress});
 
             this.updateAvailableFundsBalance();
@@ -70,7 +74,8 @@ class AddBeneficiary extends Component {
             this.setState({beneficiaryAddress: ''});
             this.setState({amount: ''});
             this.setState({delayInSeconds: ''});
-            this.setState({ errorMessage: '' });
+            //this.setState({cancelAllowed: false});
+            this.setState({errorMessage: '' });
         }
         catch(err)
         {
@@ -87,7 +92,12 @@ class AddBeneficiary extends Component {
             return (<Message error header="Oops!" content={this.state.errorMessage} />);
         }
     }
-    
+
+    toggleCheckboxValue = (e, { checked }) => {
+        console.log('CHECKBOX: ' + checked);
+        this.setState({cancelAllowed: checked});
+    }
+
     render() {
         /*
         <Input label='Funding Address:' value={this.props.trustAddress} />
@@ -107,7 +117,7 @@ class AddBeneficiary extends Component {
                 <br /><br />
                 <Input label='Payment Date:' placeholder='01/30/2020' onChange={event => this.setState({delayInSeconds: event.target.value})} />
                 <br /><br />
-                <Checkbox label='Allow Cancellation Before Payment Date' />
+                <Checkbox label='Allow Cancellation Before Payment Date' onChange={this.toggleCheckboxValue} />
                 <br /><br />
                 <Label size='large' color='teal'>Available Funds: {this.state.availableFunds} ETH</Label>
                 <br /><br />

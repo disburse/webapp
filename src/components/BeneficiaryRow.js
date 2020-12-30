@@ -43,7 +43,7 @@ class BeneficiaryRow extends Component {
         this.setState({loading: false}); 
     }
 
-    onClickRemove = async (event) => {
+    onClickCancel = async (event) => {
 
         // This prevents form from being submitted to the server
         event.preventDefault();
@@ -97,29 +97,32 @@ class BeneficiaryRow extends Component {
         //var beneficiaryId = this.props.beneficiary['id'];
         var beneficiaryAddress = this.props.beneficiary['beneficiaryAddress'];
         var beneficiaryAmount = this.props.beneficiary['amount'];
+        var cancelAllowed = this.props.beneficiary['cancelAllowed'];
         
         return (
             <Table.Row>
                 <Table.Cell>{beneficiaryAddress}</Table.Cell>
                 <Table.Cell>{web3.utils.fromWei(beneficiaryAmount, 'ether')}</Table.Cell>
                 <Table.Cell>{this.timeConverter()}</Table.Cell>
+                <Table.Cell>{cancelAllowed.toString()}</Table.Cell>
                 <Table.Cell>
-                    {this.state.readyToDisburse ? null : (
+                    {cancelAllowed && !this.state.readyToDisburse ? (
                         <Button 
                             loading={this.state.loading} 
                             color='red' 
                             basic 
-                            onClick={this.onClickRemove}>Cancel</Button>
-                    )}
+                            onClick={this.onClickCancel}>Cancel</Button>
+                    ) : null}
                 </Table.Cell> 
                 <Table.Cell>
-                    <Button 
-                        loading={this.state.loading} 
-                        color='teal' 
-                        basic 
-                        onClick={this.onClickDisburse}>
-                        &nbsp;&nbsp;&nbsp;Send&nbsp;&nbsp;&nbsp; 
-                    </Button>
+                    {this.state.readyToDisburse ? (
+                        <Button 
+                            loading={this.state.loading} 
+                            color='teal' 
+                            basic 
+                            onClick={this.onClickDisburse}>
+                            &nbsp;&nbsp;&nbsp;Send&nbsp;&nbsp;&nbsp; 
+                        </Button>) : null}
                 </Table.Cell> 
             </Table.Row>
         );        

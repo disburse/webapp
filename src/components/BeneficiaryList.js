@@ -59,7 +59,9 @@ class BeneficiaryList extends Component {
         for (var id=1; id<=topId; id++){
             var beneficiary = await contract.DISBURSE.methods.getBeneficiary(id).call({from: this.props.trustAddress});
             var complete = beneficiary['complete'];
-            //console.log('BENEFICIARY COMPLETE (id): ' + id + ' ' + complete);
+            //var cancel = beneficiary['cancelAllowed'];
+            //console.log('BENEFICIARY LIST (id): ' + id + ' ' + complete);
+            //console.log('BENEFICIARY LIST (id): ' + id + ' ' + cancel);
 
             if ((complete === false) && 
                (beneficiary.beneficiaryAddress !== '0x0000000000000000000000000000000000000000')) {
@@ -121,6 +123,7 @@ class BeneficiaryList extends Component {
                             <Table.HeaderCell>Receiving Address</Table.HeaderCell>
                             <Table.HeaderCell>Amount (ETH)</Table.HeaderCell>
                             <Table.HeaderCell>Payment Date</Table.HeaderCell>
+                            <Table.HeaderCell>Cancellation Allowed</Table.HeaderCell>
                             <Table.HeaderCell>Cancel Payment</Table.HeaderCell>
                             <Table.HeaderCell>Send Payment</Table.HeaderCell>
                         </Table.Row>
