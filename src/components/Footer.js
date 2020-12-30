@@ -27,7 +27,7 @@ const DisburseFooter = () => (
                 </List>
                 </Grid.Column>
                 <Grid.Column width={10}>
-                <Header inverted as='h4' content='Disburse.Finance' />
+                <Header inverted as='h4' content='Disburse' />
                     <p>The unstoppable way to guarantee future dated payments on ethereum!</p>
                 </Grid.Column>
             </Grid>

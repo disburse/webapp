@@ -98,6 +98,7 @@ class DisbursementList extends Component {
                             <Table.HeaderCell>From Address</Table.HeaderCell>
                             <Table.HeaderCell>Amount (ETH)</Table.HeaderCell>
                             <Table.HeaderCell>Payment Date</Table.HeaderCell>
+                            <Table.HeaderCell>Refund Payment</Table.HeaderCell>
                             <Table.HeaderCell>Accept Payment</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>

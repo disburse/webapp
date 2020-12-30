@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Button, Label, Header, Message } from 'semantic-ui-react';
+import { Input, Button, Label, Header, Message, Checkbox } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import web3 from '../web3';
 import contract from '../contracts';
@@ -106,6 +106,8 @@ class AddBeneficiary extends Component {
                 </Input>
                 <br /><br />
                 <Input label='Payment Date:' placeholder='01/30/2020' onChange={event => this.setState({delayInSeconds: event.target.value})} />
+                <br /><br />
+                <Checkbox label='Allow Cancellation Before Payment Date' />
                 <br /><br />
                 <Label size='large' color='teal'>Available Funds: {this.state.availableFunds} ETH</Label>
                 <br /><br />

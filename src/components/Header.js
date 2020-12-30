@@ -11,7 +11,7 @@ const DisburseHeader = () => (
         <Menu fixed='top' inverted>
             <Container>
                 <Link to='/'>
-                    <Menu.Item header>Disburse.Finance</Menu.Item>
+                    <Menu.Item header>Disburse</Menu.Item>
                 </Link>
             </Container>
         </Menu>

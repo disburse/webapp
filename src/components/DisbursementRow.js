@@ -20,7 +20,11 @@ class DisbursementRow extends Component {
         this.setState({readyToDisburse: ready});
     }
 
-    onClickReceive = async (event) => {
+    onClickRefund = async (event) => {
+
+    }
+
+    onClickAccept = async (event) => {
         // This prevents form from being submitted to the server
         event.preventDefault();
         this.setState({loading: true});
@@ -82,12 +86,19 @@ class DisbursementRow extends Component {
                 <Table.Cell>{web3.utils.fromWei(beneficiaryAmount, 'ether')}</Table.Cell>
                 <Table.Cell>{this.timeConverter()}</Table.Cell>
                 <Table.Cell>
-                    {!this.state.readyToDisburse ? 'Please wait for payment date.' : (
+                    <Button
+                        loading={this.state.loading} 
+                        color='red'
+                        basic
+                        onClick={this.onClickRefund}>Refund</Button>
+                </Table.Cell>
+                <Table.Cell>
+                    {!this.state.readyToDisburse ? null : (
                         <Button
                             loading={this.state.loading} 
                             color='teal'
                             basic
-                            onClick={this.onClickReceive}>Accept</Button>
+                            onClick={this.onClickAccept}>Accept</Button>
                     )}    
                 </Table.Cell>
             </Table.Row>

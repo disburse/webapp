@@ -11,7 +11,6 @@ import {
   Grid,
   Header,
   Icon,
-  Image,
   List,
   Menu,
   Segment,
@@ -47,7 +46,7 @@ const HomepageHeading = ({ mobile }) => (
     />
     <Header
       as='h2'
-      content='The unstoppable way to guarantee future dated payments!'
+      content='The unstoppable way to guarantee future dated payments'
       inverted
       style={{
         fontSize: mobile ? '1.5em' : '1.7em',
@@ -105,7 +104,7 @@ class DesktopContainer extends Component {
               <Container>
                 <Link to='/'>
                     <Menu.Item as='a' active>
-                        Disburse.Finance
+                        Disburse
                     </Menu.Item>
                 </Link>
                 <Menu.Item position='right'>
@@ -153,14 +152,11 @@ class MobileContainer extends Component {
             vertical
             visible={sidebarOpened}
           >
-            <Menu.Item as='a' active>
-              Home
-            </Menu.Item>
-            <Menu.Item as='a'>Work</Menu.Item>
-            <Menu.Item as='a'>Company</Menu.Item>
-            <Menu.Item as='a'>Careers</Menu.Item>
-            <Menu.Item as='a'>Log in</Menu.Item>
-            <Menu.Item as='a'>Sign Up</Menu.Item>
+            <Link to='/'>
+              <Menu.Item as='a' active>
+                Disburse
+              </Menu.Item>
+            </Link>
           </Sidebar>
 
           <Sidebar.Pusher dimmed={sidebarOpened}>
@@ -176,12 +172,11 @@ class MobileContainer extends Component {
                     <Icon name='sidebar' />
                   </Menu.Item>
                   <Menu.Item position='right'>
-                    <Button as='a' inverted>
-                      Log in
-                    </Button>
-                    <Button as='a' inverted style={{ marginLeft: '0.5em' }}>
-                      Sign Up
-                    </Button>
+                    <Link to='/pay'>
+                      <Button as='a' inverted style={{ marginLeft: '0.5em' }}>
+                        Launch App
+                      </Button>
+                    </Link>
                   </Menu.Item>
                 </Menu>
               </Container>
@@ -218,92 +213,44 @@ ResponsiveContainer.propTypes = {
 const HomepageLayout = () => (
   <ResponsiveContainer>
     <Segment style={{ padding: '8em 0em' }} vertical>
-      <Grid container stackable verticalAlign='middle'>
-        <Grid.Row>
-          <Grid.Column width={8}>
-            <Header as='h3' style={{ fontSize: '2em' }}>
-              We Help Companies and Companions
-            </Header>
-            <p style={{ fontSize: '1.33em' }}>
-              We can give your company superpowers to do things that they never thought possible.
-              Let us delight your customers and empower your needs... through pure data analytics.
-            </p>
-            <Header as='h3' style={{ fontSize: '2em' }}>
-              We Make Bananas That Can Dance
-            </Header>
-            <p style={{ fontSize: '1.33em' }}>
-              Yes that's right, you thought it was the stuff of dreams, but even bananas can be
-              bioengineered.
-            </p>
-          </Grid.Column>
-          <Grid.Column floated='right' width={6}>
-            <Image bordered rounded size='large' src='/images/wireframe/white-image.png' />
-          </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Column textAlign='center'>
-            <Button size='huge'>Check Them Out</Button>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
-    </Segment>
-
-    <Segment style={{ padding: '0em' }} vertical>
-      <Grid celled='internally' columns='equal' stackable>
-        <Grid.Row textAlign='center'>
-          <Grid.Column style={{ paddingBottom: '5em', paddingTop: '5em' }}>
-            <Header as='h3' style={{ fontSize: '2em' }}>
-              "What a Company"
-            </Header>
-            <p style={{ fontSize: '1.33em' }}>That is what they all say about us</p>
-          </Grid.Column>
-          <Grid.Column style={{ paddingBottom: '5em', paddingTop: '5em' }}>
-            <Header as='h3' style={{ fontSize: '2em' }}>
-              "I shouldn't have gone with their competitor."
-            </Header>
-            <p style={{ fontSize: '1.33em' }}>
-              <Image avatar src='/images/avatar/large/nan.jpg' />
-              <b>Nan</b> Chief Fun Officer Acme Toys
-            </p>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
-    </Segment>
-
-    <Segment style={{ padding: '8em 0em' }} vertical>
       <Container text>
         <Header as='h3' style={{ fontSize: '2em' }}>
-          Breaking The Grid, Grabs Your Attention
+          The Problem
         </Header>
         <p style={{ fontSize: '1.33em' }}>
-          Instead of focusing on content creation and hard work, we have learned how to master the
-          art of doing nothing by providing massive amounts of whitespace and generic content that
-          can seem massive, monolithic and worth your attention.
+          There are times when we need to promise a recipient to pay them at a specified 
+          date in the future.  Unfortunately, a promise is often not a sufficient 
+          guarantee, especially to recipients we do not know.  Ensuring that a promise of future 
+          payment is guranteed and unstoppable is the problem that Disburse solves.
         </p>
-        <Button as='a' size='large'>
-          Read More
-        </Button>
 
-        <Divider
-          as='h4'
-          className='header'
-          horizontal
-          style={{ margin: '3em 0em', textTransform: 'uppercase' }}
-        >
-          <a href='http://www.google.com'>Case Studies</a>
-        </Divider>
+        <br />
+        <Divider />
+        <br />
 
         <Header as='h3' style={{ fontSize: '2em' }}>
-          Did We Tell You About Our Bananas?
+          Unstoppable Future Settlement
         </Header>
         <p style={{ fontSize: '1.33em' }}>
-          Yes I know you probably disregarded the earlier boasts as non-sequitur filler content, but
-          it's really true. It took years of gene splicing and combinatory DNA research, but our
-          bananas can really dance.
+          Blockchain technology is able to elegantly settle transactions in near real time.  Unfortunately,
+          sometimes we need to settle a transaction at a specified date in the future, with the same
+          guarantees that instant settlements have.  The Disburse application makes this possible.
         </p>
-        <Button as='a' size='large'>
-          I'm Still Quite Interested
-        </Button>
+
+        <br />
+        <Divider />
+        <br />
+
+        <Header as='h3' style={{ fontSize: '2em' }}>
+          Our Promise
+        </Header>
+        <p style={{ fontSize: '1.33em' }}>
+          Once a recipient receives a future dated payment, they are guaranteed to
+          receive the promised funds. Once the disburesement date passes, the promised funds are 
+          delivered to the recipient. For the first time, recipients have 100% assurance that 
+          payment promises will always be kept.
+        </p>
+
       </Container>
     </Segment>
 
@@ -328,7 +275,7 @@ const HomepageLayout = () => (
               </List>
             </Grid.Column>
             <Grid.Column width={10}>
-                <Header inverted as='h4' content='Disburse.Finance' />
+                <Header inverted as='h4' content='Disburse' />
                     <p>The unstoppable way to guarantee future dated payments on ethereum!</p>
             </Grid.Column>
           </Grid.Row>

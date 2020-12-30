@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Header, Container } from 'semantic-ui-react';
+import { Grid, Header, Container, Divider } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import FundAccount from './FundAccount';
 import AddBeneficiary from './AddBeneficiary';
@@ -48,8 +48,13 @@ class Disburse extends Component {
         <div>
             <DisburseHeader />
             <Container style={{ marginTop: '4em' }}>
-            <br />
-            <br />
+            <Grid textAlign='left' columns={1}>
+                <Grid.Column>  
+                    <Divider horizontal>
+                    Testing In-Progress: Goerli Testnet Network
+                    </Divider>
+                </Grid.Column>
+            </Grid>
             <Grid textAlign='left' columns={1}>
                 <Grid.Column>  
                     <Header size='medium'>Setup Future Dated Payment</Header>
