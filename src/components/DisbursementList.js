@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { Header, Table, Message} from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
-import web3 from '../web3';
-import contract from '../contracts';
 import DisbursementRow from './DisbursementRow';
+import connection from '../web3';
+
+let web3 = connection.web3
+let DISBURSE = connection.disburse;
 
 class DisbursementList extends Component {
 
     state = {
+        loadApp: false,
         disbursementList: [],
         errorMessage: ''
     } 
@@ -29,35 +32,51 @@ class DisbursementList extends Component {
         // Call back parent component to update available funds (addBeneficiary)
         this.props.parentForceUpdate();
     }
-
-    componentDidMount = async () => {
-
-        await web3.eth.net.getId();  
-
-        var beneficiaryAddress = this.props.trustAddress;
-        var topId = await contract.DISBURSE.methods.topDisbursementId(beneficiaryAddress).call();
-
-        var list = [];
-        for (var id=1; id<=topId; id++){
-
-            // Iterate through disburements and record the distribution ID
-            var disbursement = await contract.DISBURSE.methods.disbursements(this.props.trustAddress, id).call({from: this.props.trustAddress});
-            
-            var beneficiaryId = disbursement['beneficiaryId'];
-            var trustAddress = disbursement['trustAddress']
-            
-            var beneficiary = await contract.DISBURSE.methods.getBeneficiary(beneficiaryId).call({from: trustAddress});
-            var complete = beneficiary['complete'];
-
-            if ((complete === false) && 
-                (beneficiary.beneficiaryAddress !== '0x0000000000000000000000000000000000000000')) {
-             list.push(beneficiary);
-         }
-        }
- 
-        this.setState({disbursementList: list});
-    }
     
+    callbackErrorReceived(err) {
+        console.log('ERROR RECEIVED: ' + err);
+        this.setState({errorMessage: err});
+    }
+
+    displayError() {     
+        if (this.state.errorMessage.length > 0) {
+            return (<Message error header="Oops!" content={this.state.errorMessage} />);
+        }
+    }
+
+    componentDidMount = async (load) => {
+        
+        load = true;
+        if (load){
+
+            await web3.eth.net.getId();  
+
+            var beneficiaryAddress = this.props.trustAddress;
+            var topId = await DISBURSE.methods.topDisbursementId(beneficiaryAddress).call();
+
+            var list = [];
+            for (var id=1; id<=topId; id++){
+
+                // Iterate through disburements and record the distribution ID
+                var disbursement = await DISBURSE.methods.disbursements(this.props.trustAddress, id).call({from: this.props.trustAddress});
+                
+                var beneficiaryId = disbursement['beneficiaryId'];
+                var trustAddress = disbursement['trustAddress']
+                
+                var beneficiary = await DISBURSE.methods.getBeneficiary(beneficiaryId).call({from: trustAddress});
+                var complete = beneficiary['complete'];
+
+                if ((complete === false) && 
+                    (beneficiary.beneficiaryAddress !== '0x0000000000000000000000000000000000000000')) {
+                    list.push(beneficiary);
+                }
+            }
+    
+            this.setState({disbursementList: list});
+
+        }
+    }
+
     renderRows() {
         // Map is a function available on arrays
         // Item represents every element in the array, which in this scenario is a Struct
@@ -73,17 +92,6 @@ class DisbursementList extends Component {
                 />
             );
         })
-    }
-
-    callbackErrorReceived(err) {
-        console.log('ERROR RECEIVED: ' + err);
-        this.setState({errorMessage: err});
-    }
-
-    displayError() {     
-        if (this.state.errorMessage.length > 0) {
-            return (<Message error header="Oops!" content={this.state.errorMessage} />);
-        }
     }
 
     render() {

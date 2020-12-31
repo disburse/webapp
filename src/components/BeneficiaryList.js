@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Header, Table, Label, Message } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
-import web3 from '../web3';
-import contract from '../contracts';
 import BeneficiaryRow from './BeneficiaryRow';
+import connection from '../web3';
+
+let web3 = connection.web3
+let DISBURSE = connection.disburse;
 
 class BeneficiaryList extends Component {
 
@@ -38,7 +40,7 @@ class BeneficiaryList extends Component {
         if (this.props.trustAddress != null){
 
             // Update allocated funds balance
-            var weiBalance = await contract.DISBURSE.methods.getBeneficiaryBalance(this.props.trustAddress).call();
+            var weiBalance = await DISBURSE.methods.getBeneficiaryBalance(this.props.trustAddress).call();
 
             var etherBalance = 0;
             if (weiBalance > 0){
@@ -49,33 +51,48 @@ class BeneficiaryList extends Component {
         }
     }
 
-    componentDidMount = async () => {
-        
-        await web3.eth.net.getId();  
-        
-        var topId = await contract.DISBURSE.methods.getTopBeneficiaryId().call({from: this.props.trustAddress});
-
-        var list = [];
-        for (var id=1; id<=topId; id++){
-            var beneficiary = await contract.DISBURSE.methods.getBeneficiary(id).call({from: this.props.trustAddress});
-            var complete = beneficiary['complete'];
-            //var cancel = beneficiary['cancelAllowed'];
-            //console.log('BENEFICIARY LIST (id): ' + id + ' ' + complete);
-            //console.log('BENEFICIARY LIST (id): ' + id + ' ' + cancel);
-
-            if ((complete === false) && 
-               (beneficiary.beneficiaryAddress !== '0x0000000000000000000000000000000000000000')) {
-                list.push(beneficiary);
-            }
-        }
-
-        this.setState({errorMessage: ''});
-        this.setState({beneficiaryList: list});
-
-        // Update allocated funds balance
-        this.updateAllocatedFundsBalance();
+    callbackErrorReceived(err) {
+        console.log('ERROR RECEIVED: ' + err);
+        this.setState({errorMessage: err});
     }
-    
+
+    displayError() {     
+        if (this.state.errorMessage.length > 0) {
+            return (<Message error header="Oops!" content={this.state.errorMessage} />);
+        }
+    }
+
+    componentDidMount = async (load) => {
+        
+        load = true;
+        if (load){
+
+            await web3.eth.net.getId();  
+            
+            var topId = await DISBURSE.methods.getTopBeneficiaryId().call({from: this.props.trustAddress});
+
+            var list = [];
+            for (var id=1; id<=topId; id++){
+                var beneficiary = await DISBURSE.methods.getBeneficiary(id).call({from: this.props.trustAddress});
+                var complete = beneficiary['complete'];
+                //var cancel = beneficiary['cancelAllowed'];
+                //console.log('BENEFICIARY LIST (id): ' + id + ' ' + complete);
+                //console.log('BENEFICIARY LIST (id): ' + id + ' ' + cancel);
+
+                if ((complete === false) && 
+                (beneficiary.beneficiaryAddress !== '0x0000000000000000000000000000000000000000')) {
+                    list.push(beneficiary);
+                }
+            }
+
+            this.setState({errorMessage: ''});
+            this.setState({beneficiaryList: list});
+
+            // Update allocated funds balance
+            this.updateAllocatedFundsBalance();
+        }
+    }
+
     renderRows() {
         // Map is a function available on arrays
         // Item represents every element in the array, which in this scenario is a Struct
@@ -90,17 +107,6 @@ class BeneficiaryList extends Component {
                 />
             );
         })
-    }
-
-    callbackErrorReceived(err) {
-        console.log('ERROR RECEIVED: ' + err);
-        this.setState({errorMessage: err});
-    }
-
-    displayError() {     
-        if (this.state.errorMessage.length > 0) {
-            return (<Message error header="Oops!" content={this.state.errorMessage} />);
-        }
     }
 
     render() {

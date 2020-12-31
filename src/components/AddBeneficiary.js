@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Input, Button, Label, Header, Message, Checkbox } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
-import web3 from '../web3';
-import contract from '../contracts';
+import connection from '../web3';
+
+let web3 = connection.web3
+let DISBURSE = connection.disburse;
 
 class AddBeneficiary extends Component {
 
@@ -21,8 +23,8 @@ class AddBeneficiary extends Component {
         if (this.props.trustAddress != null){
 
             // Update allocated funds balance
-            var trustBalance = await contract.DISBURSE.methods.getTrustBalance(this.props.trustAddress).call();
-            var allocatedBalance = await contract.DISBURSE.methods.getBeneficiaryBalance(this.props.trustAddress).call();
+            var trustBalance = await DISBURSE.methods.getTrustBalance(this.props.trustAddress).call();
+            var allocatedBalance = await DISBURSE.methods.getBeneficiaryBalance(this.props.trustAddress).call();
         
             var weiBalance = 0;
             if (trustBalance >= 0 && allocatedBalance >= 0){
@@ -35,15 +37,6 @@ class AddBeneficiary extends Component {
             // When this balance updates, we need to update the balance on other components
             this.props.parentForceUpdate();
         }
-    }
-
-    
-    componentDidMount = async () => {
-
-        // Removing this line cause the form to not load
-        await web3.eth.net.getId();  
-
-        this.updateAvailableFundsBalance();
     }
 
     onClickAdd = async (event) => {
@@ -61,7 +54,7 @@ class AddBeneficiary extends Component {
             console.log("AMT: " + weiAmount);  
             console.log("CANCEL ALLOWED: " + this.state.cancelAllowed);
             
-            await contract.DISBURSE.methods.addBeneficiarySeconds(
+            await DISBURSE.methods.addBeneficiarySeconds(
                                     this.state.beneficiaryAddress, 
                                     this.state.delayInSeconds, 
                                     weiAmount,
@@ -96,6 +89,18 @@ class AddBeneficiary extends Component {
     toggleCheckboxValue = (e, { checked }) => {
         console.log('CHECKBOX: ' + checked);
         this.setState({cancelAllowed: checked});
+    }
+
+    componentDidMount = async (load) => {
+
+        load = true;
+        if (load){
+
+            // Removing this line cause the form to not load
+            await web3.eth.net.getId();  
+
+            this.updateAvailableFundsBalance();
+        }
     }
 
     render() {

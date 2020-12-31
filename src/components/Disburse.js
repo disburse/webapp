@@ -11,15 +11,20 @@ import DisburseFooter from './Footer';
 class Disburse extends Component {
 
     state = {
+        web3: null,
         contractAddress: '',
         trustAddress: '',
     } 
 
-    // constructor(props){
+    // The constructor for a React component is called before it is mounted. When implementing 
+    // the constructor for a React.Component subclass, you should call super(props) before any 
+    // other statement. Otherwise, this.props will be undefined in the constructor, which can 
+    // lead to bugs.
+    //constructor(props){
     //    super(props);
-    // }
+    //}
 
-    // componentDidMount = async () => {}
+    //componentDidMount = async () => {}
 
     callbackTrustAddress = (address) => {
         this.setState({trustAddress: address})
@@ -43,10 +48,14 @@ class Disburse extends Component {
         this.refs.cBeneficiaryList.componentDidMount();
     }
 
+    callbackLoadWallet = async () => {        
+        console.log('CLICK LOAD WALLET');
+    }
+
     render() {
         return (
         <div>
-            <DisburseHeader />
+            <DisburseHeader loadWallet = {this.callbackLoadWallet}/>
             <Container style={{ marginTop: '4em' }}>
             <Grid textAlign='left' columns={1}>
                 <Grid.Column>  
@@ -112,12 +121,3 @@ class Disburse extends Component {
 }
 
 export default Disburse;
-
-// <Message header="" content={this.state.message}/>
-// <Message error header="Oops!" content={this.state.errorMessage} />
-
-// Retrieve the value of a state variable
-//value = {this.state.variableName}
-
-// Set the value of a state variable on a form element
-//onChange = {event => this.setState({variableName: event.target.value})}
