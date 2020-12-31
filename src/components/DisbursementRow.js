@@ -15,7 +15,35 @@ class DisbursementRow extends Component {
     }     
 
     onClickRefund = async (event) => {
-        // TO BE IMPLEMENTED
+
+        // This prevents form from being submitted to the server
+        event.preventDefault();
+        this.setState({loading: true});
+
+        try {
+            var beneficiaryId = this.props.beneficiary['id'];
+            var trustAddress = this.props.beneficiary['trustAddress'];
+            var beneficiaryAddress = this.props.beneficiary['beneficiaryAddress'];
+
+            console.log("REFUND CALLED BY BENEFICIARY (id): " + beneficiaryId);
+           
+            // Get disbursement ID
+            var disbursementId = await DISBURSE.methods.getDisbursementId(trustAddress, beneficiaryId).call();
+            console.log("DISBURSEMENT ID: " + disbursementId);
+
+            // Call refund
+            console.log('BENEFICIARY ADDRESS: ' + beneficiaryAddress);
+            await DISBURSE.methods.refundTrust(disbursementId).send({from: beneficiaryAddress});
+            
+            this.props.parentCallback();
+        }
+        catch(err)
+        {
+            this.setState({ errorMessage: err.message });
+            this.props.errorCallback(this.state.errorMessage);
+        }
+
+        this.setState({loading: false}); 
     }
 
     onClickAccept = async (event) => {

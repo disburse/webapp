@@ -52,7 +52,7 @@ class BeneficiaryList extends Component {
     }
 
     callbackErrorReceived(err) {
-        console.log('ERROR RECEIVED: ' + err);
+        console.log('BENEFICIARY ROW ERROR RECEIVED: ' + err);
         this.setState({errorMessage: err});
     }
 

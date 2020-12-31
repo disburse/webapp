@@ -34,7 +34,7 @@ class DisbursementList extends Component {
     }
     
     callbackErrorReceived(err) {
-        console.log('ERROR RECEIVED: ' + err);
+        console.log('DISBURSEMENT ROW ERROR RECEIVED: ' + err);
         this.setState({errorMessage: err});
     }
 
