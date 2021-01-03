@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Input, Button, Label, Header, Message } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import validator from 'validator';
-import Disburse from '../contracts';
+import utility from '../utility';
 
 class FundAccount extends Component {
 
@@ -144,7 +144,7 @@ class FundAccount extends Component {
         if (web3 !== undefined){
 
             this.setState({web3: web3});
-            this.setState({disburse: Disburse(web3)});
+            this.setState({disburse: utility.getDisburse(web3)});
  
             const accounts = await web3.eth.getAccounts();
             this.setState({ trustAddress: accounts[0] });

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Header, Table, Message} from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import DisbursementRow from './DisbursementRow';
-import Disburse from '../contracts';
+import utility from '../utility';
 
 class DisbursementList extends Component {
 
@@ -48,7 +48,7 @@ class DisbursementList extends Component {
         if (web3 !== undefined){
 
             this.setState({web3: web3});
-            this.setState({disburse: Disburse(web3)});
+            this.setState({disburse: utility.getDisburse(web3)});
 
             await web3.eth.net.getId();  
 
@@ -109,6 +109,7 @@ class DisbursementList extends Component {
                             <Table.HeaderCell>From Address</Table.HeaderCell>
                             <Table.HeaderCell>Amount (ETH)</Table.HeaderCell>
                             <Table.HeaderCell>Payment Date</Table.HeaderCell>
+                            <Table.HeaderCell>Cancellation Allowed</Table.HeaderCell>
                             <Table.HeaderCell>Refund Payment</Table.HeaderCell>
                             <Table.HeaderCell>Accept Payment</Table.HeaderCell>
                         </Table.Row>

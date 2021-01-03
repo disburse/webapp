@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Header, Table, Label, Message } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import BeneficiaryRow from './BeneficiaryRow';
-import Disburse from '../contracts';
+import utility from '../utility';
 
 class BeneficiaryList extends Component {
 
@@ -66,7 +66,7 @@ class BeneficiaryList extends Component {
         if (web3 !== undefined){
 
             this.setState({web3: web3});
-            this.setState({disburse: Disburse(web3)});
+            this.setState({disburse: utility.getDisburse(web3)});
 
             await web3.eth.net.getId();  
             

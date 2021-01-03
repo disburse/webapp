@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Table, Button } from 'semantic-ui-react';
+import utility from '../utility';
 
 class DisbursementRow extends Component {
 
@@ -78,20 +79,6 @@ class DisbursementRow extends Component {
         this.setState({loading: false}); 
     }
 
-    timeConverter = () => {
-        var unix_timestamp = this.props.beneficiary['disburseDate'];
-        var a = new Date(unix_timestamp * 1000);
-        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-        var year = a.getFullYear();
-        var month = months[a.getMonth()];
-        var date = a.getDate();
-        var hour = a.getHours();
-        var min = a.getMinutes();
-        var sec = a.getSeconds();
-        var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
-        return time;
-    }
-
     componentDidMount = async () => {
 
         // This component is called once the DistributionList component loads
@@ -112,13 +99,15 @@ class DisbursementRow extends Component {
         // Retrieve key variables from beneficiary    
         // var beneficiaryId = this.props.beneficiary['id'];
         var trustAddress = this.props.beneficiary['trustAddress'];
+        var cancelAllowed = this.props.beneficiary['cancelAllowed'];
         //var beneficiaryDisbursement = this.props.beneficiary['disburseDate'];
     
         return (
             <Table.Row>
                 <Table.Cell>{trustAddress}</Table.Cell>
                 <Table.Cell>{this.state.amount}</Table.Cell>
-                <Table.Cell>{this.timeConverter()}</Table.Cell>
+                <Table.Cell>{utility.timeConverter(this.props.beneficiary['disburseDate'])}</Table.Cell>
+                <Table.Cell>{utility.capitalize(cancelAllowed.toString())}</Table.Cell>
                 <Table.Cell>
                     <Button
                         loading={this.state.loading} 

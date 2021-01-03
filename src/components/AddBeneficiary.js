@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Input, Button, Label, Header, Message, Checkbox } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import validator from 'validator';
-import Disburse from '../contracts';
+import utility from '../utility';
 
 class AddBeneficiary extends Component {
 
@@ -162,7 +162,7 @@ class AddBeneficiary extends Component {
         if (web3 !== undefined){
 
             this.setState({web3: web3});
-            this.setState({disburse: Disburse(web3)});
+            this.setState({disburse: utility.getDisburse(web3)});
 
             // Removing this line cause the form to not load
             await web3.eth.net.getId();  
