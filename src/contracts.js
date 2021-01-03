@@ -1,41 +1,31 @@
-import connection from '../web3';
-
 const DISBURSEV1_JSON = require('./contracts/DisburseV1.json');
 const DISBURSEV1GOERLI_JSON = require('./contracts/DisburseV1Goerli.json');
 
-let CONTRACT_ADDRESS;
-let ABI;
-let NETWORK_ID = '5777';
-let DISBURSE;
+// Function to load disburse contract
+// This function cannot be async, otherwise the calling code will continue to 
+// execute before the function is finished loading.
+var loadContract = (web3) => {
 
-// The await operator is used to wait for a Promise. It can be used inside an Async block only. 
-// The keyword Await makes JavaScript wait until the promise returns a result. It has to be noted 
-// that it only makes the async function block wait and **NOT** the whole program execution.
+    var disburse;
 
-var loadContract = async () => {
-
-    let web3 = connection.web3
-
-    NETWORK_ID = await web3.eth.net.getId();  
-    console.log('RETREIVED NETWORK ID: ' + NETWORK_ID);
-
-    console.log('DEFAULT NETWORK ID: ' + NETWORK_ID);
+    // Localhost network
+    var networkId = '5777';
 
     // Localhost
-    if (NETWORK_ID === '5777'){
-        ABI = DISBURSEV1_JSON.abi;
-        CONTRACT_ADDRESS = DISBURSEV1_JSON.networks[NETWORK_ID].address;
+    if (true){
+        disburse = new web3.eth.Contract(DISBURSEV1_JSON.abi, DISBURSEV1_JSON.networks[networkId].address);
     }
     // Goerli
-    else if (NETWORK_ID === '5') {
-        ABI = DISBURSEV1GOERLI_JSON;
-        CONTRACT_ADDRESS = '0x9102994DC42CFF82D60BeCe90d31B8d409Afcbd3';
+    else if (networkId === '5') {
+        let CONTRACT_ADDRESS = '0x9102994DC42CFF82D60BeCe90d31B8d409Afcbd3';
+        disburse = new web3.eth.Contract(DISBURSEV1GOERLI_JSON, CONTRACT_ADDRESS);
+    }
+    else{
+        console.log('CONTRACT LOADING ERROR');
     }
 
-    DISBURSE = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
-
-    return DISBURSE;
-
+    console.log('DISBURSE: ' + disburse);
+    return disburse;
 }
 
 export default loadContract;

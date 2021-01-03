@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import {Input, Button, Label, Header, Message } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
-import connection from '../web3';
-
-let web3 = connection.web3
-let DISBURSE = connection.disburse;
+import Disburse from '../contracts';
 
 class FundAccount extends Component {
 
     state = {
+        web3: null,
+        disburse: null,
         trustAddress: '',
         amount: '',
         depositedFunds: '',
@@ -20,11 +19,11 @@ class FundAccount extends Component {
 
         if (this.state.trustAddress != null){
             
-            var weiBalance = await DISBURSE.methods.getTrustBalance(this.state.trustAddress).call();
+            var weiBalance = await this.state.disburse.methods.getTrustBalance(this.state.trustAddress).call();
             
             var etherBalance = 0;
             if (weiBalance > 0){
-                etherBalance = web3.utils.fromWei(weiBalance.toString(), 'ether');
+                etherBalance = this.state.web3.utils.fromWei(weiBalance.toString(), 'ether');
             }
 
             this.setState({ depositedFunds: etherBalance });    
@@ -43,9 +42,9 @@ class FundAccount extends Component {
 
         try {
             console.log("START DEPOSIT");
-            var weiAmount = web3.utils.toWei(this.state.amount, 'ether');
+            var weiAmount = this.state.web3.utils.toWei(this.state.amount, 'ether');
             
-            await DISBURSE.methods.contributeToTrust().send({ from: this.state.trustAddress, value: weiAmount });
+            await this.state.disburse.methods.contributeToTrust().send({ from: this.state.trustAddress, value: weiAmount });
 
             this.updateDepositedFundsBalance();
 
@@ -71,8 +70,8 @@ class FundAccount extends Component {
 
         try {
             console.log("START WITHRAW");
-            var weiAmount = web3.utils.toWei(this.state.amount, 'ether');
-            await DISBURSE.methods.withdrawAmountFromTrustBalance(weiAmount).send({from: this.state.trustAddress});
+            var weiAmount = this.state.web3.utils.toWei(this.state.amount, 'ether');
+            await this.state.disburse.methods.withdrawAmountFromTrustBalance(weiAmount).send({from: this.state.trustAddress});
             
             this.updateDepositedFundsBalance();
 
@@ -96,11 +95,15 @@ class FundAccount extends Component {
         }
     }
 
-    componentDidMount = async (load) => {
+    componentDidMount = async (web3) => {
 
-        load = true;
-        if (load){
+        console.log('WEB3 (FundAccount): ' + web3);
 
+        if (web3 !== undefined){
+
+            this.setState({web3: web3});
+            this.setState({disburse: Disburse(web3)});
+ 
             const accounts = await web3.eth.getAccounts();
             this.setState({ trustAddress: accounts[0] });
 

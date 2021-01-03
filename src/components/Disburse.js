@@ -7,6 +7,8 @@ import BeneficiaryList from './BeneficiaryList';
 import DisbursementList from './DisbursementList';
 import DisburseHeader from './Header';
 import DisburseFooter from './Footer';
+import Web3 from "web3";
+import Web3Modal from "web3modal";
 
 class Disburse extends Component {
 
@@ -33,23 +35,42 @@ class Disburse extends Component {
     callbackUpdateAllComponents = () => {        
         console.log("PARENT FORCE UPDATE CALLED (UpdateAddBeneficiary)");
         
-        this.refs.cFundAccount.componentDidMount();
-        this.refs.cAddBeneficiary.componentDidMount();
-        this.refs.cDisbursementList.componentDidMount();
+        this.refs.cFundAccount.componentDidMount(this.state.web3);
+        this.refs.cAddBeneficiary.componentDidMount(this.state.web3);
+        this.refs.cDisbursementList.componentDidMount(this.state.web3);
     }
 
     callbackUpdateAddBeneficiary = () => {        
         console.log("PARENT FORCE UPDATE CALLED (UpdateAddBeneficiary)");        
-        this.refs.cAddBeneficiary.componentDidMount();
+        this.refs.cAddBeneficiary.componentDidMount(this.state.web3);
     }
 
     callbackUpdateBeneficiaryList = () => {        
         console.log("PARENT FORCE UPDATE CALLED (UpdateBeneficiaryList)");
-        this.refs.cBeneficiaryList.componentDidMount();
+        this.refs.cBeneficiaryList.componentDidMount(this.state.web3);
     }
 
     callbackLoadWallet = async () => {        
         console.log('CLICK LOAD WALLET');
+      
+        const providerOptions = {
+          /* See Provider Options Section */
+        };
+        
+        const web3Modal = new Web3Modal({
+          //network: "mainnet", // optional
+          //cacheProvider: true, // optional
+          providerOptions // required
+        });
+        
+        const provider = await web3Modal.connect();
+        const web3 = new Web3(provider);
+        this.setState({web3: web3});
+
+        this.refs.cFundAccount.componentDidMount(this.state.web3);
+        this.refs.cAddBeneficiary.componentDidMount(this.state.web3);
+        this.refs.cBeneficiaryList.componentDidMount(this.state.web3);
+        this.refs.cDisbursementList.componentDidMount(this.state.web3);
     }
 
     render() {
@@ -121,3 +142,13 @@ class Disburse extends Component {
 }
 
 export default Disburse;
+
+
+// web3 can be saved in the state
+
+// if (typeof web3 === 'undefined'){}
+
+// Within render()
+// if (!this.state.web3){
+//  return <div>Loading web3</div> 
+// }

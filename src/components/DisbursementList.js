@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import { Header, Table, Message} from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import DisbursementRow from './DisbursementRow';
-import connection from '../web3';
-
-let web3 = connection.web3
-let DISBURSE = connection.disburse;
+import Disburse from '../contracts';
 
 class DisbursementList extends Component {
 
     state = {
+        web3: null,
+        disburse: null,        
         loadApp: false,
         disbursementList: [],
         errorMessage: ''
@@ -44,26 +43,28 @@ class DisbursementList extends Component {
         }
     }
 
-    componentDidMount = async (load) => {
+    componentDidMount = async (web3) => {
         
-        load = true;
-        if (load){
+        if (web3 !== undefined){
+
+            this.setState({web3: web3});
+            this.setState({disburse: Disburse(web3)});
 
             await web3.eth.net.getId();  
 
             var beneficiaryAddress = this.props.trustAddress;
-            var topId = await DISBURSE.methods.topDisbursementId(beneficiaryAddress).call();
+            var topId = await this.state.disburse.methods.topDisbursementId(beneficiaryAddress).call();
 
             var list = [];
             for (var id=1; id<=topId; id++){
 
                 // Iterate through disburements and record the distribution ID
-                var disbursement = await DISBURSE.methods.disbursements(this.props.trustAddress, id).call({from: this.props.trustAddress});
+                var disbursement = await this.state.disburse.methods.disbursements(this.props.trustAddress, id).call({from: this.props.trustAddress});
                 
                 var beneficiaryId = disbursement['beneficiaryId'];
                 var trustAddress = disbursement['trustAddress']
                 
-                var beneficiary = await DISBURSE.methods.getBeneficiary(beneficiaryId).call({from: trustAddress});
+                var beneficiary = await this.state.disburse.methods.getBeneficiary(beneficiaryId).call({from: trustAddress});
                 var complete = beneficiary['complete'];
 
                 if ((complete === false) && 
@@ -85,6 +86,8 @@ class DisbursementList extends Component {
             return( 
                 <DisbursementRow
                         ref = "cDisbursementRow"
+                        web3 = {this.state.web3}
+                        disburse = {this.state.disburse}
                         key = {index}
                         beneficiary = {item}
                         parentCallback = {this.callbackUpdateTable}

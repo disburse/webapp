@@ -1,10 +1,11 @@
-import Web3 from "web3";
+//import Web3 from "web3";
 const DISBURSEV1_JSON = require('./contracts/DisburseV1.json');
 const DISBURSEV1GOERLI_JSON = require('./contracts/DisburseV1Goerli.json');
-let web3;
+//let web3;
 let disburse;
 
 // Function to load metamask wallet
+/*
 var loadWeb3 = () => {
 
     if (window.ethereum) {
@@ -28,9 +29,10 @@ var loadWeb3 = () => {
 
     return web3;
 }
+*/
 
 // Function to load disburse contract
-var loadContract = () => {
+var loadContract = (web3) => {
 
     // Localhost network
     let NETWORK_ID = '5777';
@@ -54,8 +56,8 @@ var loadContract = () => {
     return disburse;
 }
 
-web3 = loadWeb3();
+//web3 = loadWeb3();
 
-disburse = loadContract();
+//disburse = loadContract();
 
-export default { web3, disburse };
+export default loadContract;

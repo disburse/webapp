@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { Table, Button } from 'semantic-ui-react';
-import connection from '../web3';
-
-let web3 = connection.web3
-let DISBURSE = connection.disburse;
 
 class BeneficiaryRow extends Component {
 
     state = {
+        web3: null,
+        disburse: null,
         amount: '',
         readyToDisburse: false,
         errorMessage: '',
@@ -26,10 +24,10 @@ class BeneficiaryRow extends Component {
 
             console.log("DISBURSE TO BENEFICIARY (id): " + beneficiaryId);
         
-            var readyToDisburse = await DISBURSE.methods.readyToDisburse(trustAddress, beneficiaryId).call({from: trustAddress});
+            var readyToDisburse = await this.props.disburse.methods.readyToDisburse(trustAddress, beneficiaryId).call({from: trustAddress});
             if (readyToDisburse){
                 console.log("DISBURSE INITIATED (id): " + beneficiaryId);
-                await DISBURSE.methods.disburseFunds(trustAddress, beneficiaryId).send({from: trustAddress});
+                await this.props.disburse.methods.disburseFunds(trustAddress, beneficiaryId).send({from: trustAddress});
                 this.props.parentCallback();
             }
             else{
@@ -58,7 +56,7 @@ class BeneficiaryRow extends Component {
 
             console.log("REMOVE BENEFICIARY (id): " + beneficiaryId);
            
-            await DISBURSE.methods.removeBeneficiary(beneficiaryId).send({from: trustAddress});
+            await this.props.disburse.methods.removeBeneficiary(beneficiaryId).send({from: trustAddress});
         
             this.props.parentCallback();
         }
@@ -87,17 +85,20 @@ class BeneficiaryRow extends Component {
 
     componentDidMount = async () => {
 
-        // This component is called once the BeneficiaryList component loads
-        await web3.eth.net.getId();  
-        
-        var beneficiaryId = this.props.beneficiary['id'];
-        var trustAddress = this.props.beneficiary['trustAddress'];
-        var ready = await DISBURSE.methods.readyToDisburse(trustAddress, beneficiaryId).call({from: trustAddress});
-        this.setState({readyToDisburse: ready});
+        if (this.props.web3 !== undefined){
 
-        var beneficiaryAmount = this.props.beneficiary['amount'];
-        var etherAmount = web3.utils.fromWei(beneficiaryAmount, 'ether')
-        this.setState({amount: etherAmount});
+            // This component is called once the BeneficiaryList component loads
+            await this.props.web3.eth.net.getId();  
+            
+            var beneficiaryId = this.props.beneficiary['id'];
+            var trustAddress = this.props.beneficiary['trustAddress'];
+            var ready = await this.props.disburse.methods.readyToDisburse(trustAddress, beneficiaryId).call({from: trustAddress});
+            this.setState({readyToDisburse: ready});
+
+            var beneficiaryAmount = this.props.beneficiary['amount'];
+            var etherAmount = this.props.web3.utils.fromWei(beneficiaryAmount, 'ether')
+            this.setState({amount: etherAmount});
+        }
     }
 
     render() {

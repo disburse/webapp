@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import { Header, Table, Label, Message } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import BeneficiaryRow from './BeneficiaryRow';
-import connection from '../web3';
-
-let web3 = connection.web3
-let DISBURSE = connection.disburse;
+import Disburse from '../contracts';
 
 class BeneficiaryList extends Component {
 
     state = {
+        web3: null,
+        disburse: null,        
         beneficiaryList: [],
         renderRows: '',
         allocatedFunds: '',
@@ -40,11 +39,11 @@ class BeneficiaryList extends Component {
         if (this.props.trustAddress != null){
 
             // Update allocated funds balance
-            var weiBalance = await DISBURSE.methods.getBeneficiaryBalance(this.props.trustAddress).call();
+            var weiBalance = await this.state.disburse.methods.getBeneficiaryBalance(this.props.trustAddress).call();
 
             var etherBalance = 0;
             if (weiBalance > 0){
-                etherBalance = web3.utils.fromWei(weiBalance, 'ether');
+                etherBalance = this.state.web3.utils.fromWei(weiBalance, 'ether');
             }
             
             this.setState({ allocatedFunds: etherBalance });
@@ -62,18 +61,20 @@ class BeneficiaryList extends Component {
         }
     }
 
-    componentDidMount = async (load) => {
+    componentDidMount = async (web3) => {
         
-        load = true;
-        if (load){
+        if (web3 !== undefined){
+
+            this.setState({web3: web3});
+            this.setState({disburse: Disburse(web3)});
 
             await web3.eth.net.getId();  
             
-            var topId = await DISBURSE.methods.getTopBeneficiaryId().call({from: this.props.trustAddress});
+            var topId = await this.state.disburse.methods.getTopBeneficiaryId().call({from: this.props.trustAddress});
 
             var list = [];
             for (var id=1; id<=topId; id++){
-                var beneficiary = await DISBURSE.methods.getBeneficiary(id).call({from: this.props.trustAddress});
+                var beneficiary = await this.state.disburse.methods.getBeneficiary(id).call({from: this.props.trustAddress});
                 var complete = beneficiary['complete'];
                 //var cancel = beneficiary['cancelAllowed'];
                 //console.log('BENEFICIARY LIST (id): ' + id + ' ' + complete);
@@ -100,6 +101,8 @@ class BeneficiaryList extends Component {
             return( 
                 <BeneficiaryRow
                         ref = "cBeneficiaryRow"
+                        web3 = {this.state.web3}
+                        disburse = {this.state.disburse}
                         key = {index}
                         beneficiary = {item}
                         parentCallback = {this.callbackUpdateTable}
