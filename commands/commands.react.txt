@@ -40,6 +40,10 @@ An example of how navigation works can be found here:
 
 npm install --save @artsy/fresnel
 
+7. Form validation
+
+npm install --save validator
+
 
 NOTES:
 

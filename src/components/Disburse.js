@@ -95,6 +95,7 @@ class Disburse extends Component {
                     <Grid.Column>
                         <FundAccount
                             ref = "cFundAccount"
+                            parentLoadWallet = {this.callbackLoadWallet}
                             parentForceUpdate = {this.callbackUpdateAddBeneficiary}  
                             parentCallback = {this.callbackTrustAddress} /> 
                     </Grid.Column>

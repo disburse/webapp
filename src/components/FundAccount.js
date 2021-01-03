@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Input, Button, Label, Header, Message } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
+import validator from 'validator';
 import Disburse from '../contracts';
 
 class FundAccount extends Component {
@@ -33,6 +34,46 @@ class FundAccount extends Component {
         }
     }
 
+    validate = () => {
+
+        var error = '';
+        var errors = [];
+        var valid = true;
+
+        // Clear previous error messages
+        this.setState({ errorMessage: '' });
+
+        // FUNDING ADDRESS
+        if ((validator.isEmpty(this.state.trustAddress)) ||
+            (!validator.isEthereumAddress(this.state.trustAddress))){
+            errors.push('Funding Address');
+            valid = false;
+        }
+
+        // AMOUNT
+        if ((validator.isEmpty(this.state.amount)) ||
+            (!validator.isNumeric(this.state.amount))){
+            errors.push('Amount');
+            valid = false;
+        }
+
+        // Assemble error message
+        if (!valid){
+            error = 'Invalid: ';
+            var errorList = '';
+            errors.forEach(function (item) {
+                errorList += item + ', '; 
+            });
+            error += errorList;
+        }
+
+        // Remove last comma in error list
+        var index = error.lastIndexOf(',');
+        error = error.substr(0, index);
+        this.setState({ errorMessage: error });
+        return valid;
+    }
+
     // Event handler with async to be able to call ethereum
     onClickDeposit = async (event) => {
 
@@ -41,15 +82,15 @@ class FundAccount extends Component {
         this.setState({loading: true});
 
         try {
-            console.log("START DEPOSIT");
-            var weiAmount = this.state.web3.utils.toWei(this.state.amount, 'ether');
-            
-            await this.state.disburse.methods.contributeToTrust().send({ from: this.state.trustAddress, value: weiAmount });
+            if (this.validate()){
 
-            this.updateDepositedFundsBalance();
+                var weiAmount = this.state.web3.utils.toWei(this.state.amount, 'ether');
+                await this.state.disburse.methods.contributeToTrust().send({ from: this.state.trustAddress, value: weiAmount });
+                this.updateDepositedFundsBalance();
 
-            this.setState({ amount: '' });
-            this.setState({ errorMessage: '' });
+                this.setState({ amount: '' });
+                this.setState({ errorMessage: '' });
+            }
         }
         catch(err)
         {
@@ -57,9 +98,6 @@ class FundAccount extends Component {
         }
 
         this.setState({loading: false});
-
-        // Render again to remove error message
-        //this.forceUpdate();  
     };
 
     onClickWithdraw = async (event) => {
@@ -69,14 +107,15 @@ class FundAccount extends Component {
         this.setState({loading: true});
 
         try {
-            console.log("START WITHRAW");
-            var weiAmount = this.state.web3.utils.toWei(this.state.amount, 'ether');
-            await this.state.disburse.methods.withdrawAmountFromTrustBalance(weiAmount).send({from: this.state.trustAddress});
-            
-            this.updateDepositedFundsBalance();
+            if (this.validate()){
 
-            this.setState({ amount: '' });
-            this.setState({ errorMessage: '' });
+                var weiAmount = this.state.web3.utils.toWei(this.state.amount, 'ether');
+                await this.state.disburse.methods.withdrawAmountFromTrustBalance(weiAmount).send({from: this.state.trustAddress});
+                this.updateDepositedFundsBalance();
+
+                this.setState({ amount: '' });
+                this.setState({ errorMessage: '' });
+            }
         }
         catch(err)
         {
@@ -84,9 +123,12 @@ class FundAccount extends Component {
         }
 
         this.setState({loading: false});
+    }
 
-        // Render again to remove error message
-        //this.forceUpdate();  
+    onClickLoadWallet = async () => {
+        this.props.parentLoadWallet();
+        this.setState({amount: ''});
+        this.setState({errorMessage: ''});
     }
 
     displayError() {       
@@ -121,7 +163,11 @@ class FundAccount extends Component {
             <div>
                 <Header sub>1. Deposit or withdraw funds that will be available for use in future dated payments.</Header>
                 <br />
-                <Input label='Funding Address:' value={this.state.trustAddress} />
+                <Input labelPosition='right' type='text' placeholder='0x...'>
+                    <Label>Funding Address:</Label>
+                    <input value={this.state.trustAddress} />
+                    <Button compact color='teal' onClick={this.onClickLoadWallet}>Load</Button>
+                </Input>
                 <br /><br />
                 <Input labelPosition='right' type='text' placeholder='Amount'>
                     <Label>Amount:</Label>

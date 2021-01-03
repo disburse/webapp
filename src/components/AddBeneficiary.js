@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Input, Button, Label, Header, Message, Checkbox } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
+import validator from 'validator';
 import Disburse from '../contracts';
 
 class AddBeneficiary extends Component {
@@ -10,7 +11,7 @@ class AddBeneficiary extends Component {
         disburse: null,        
         beneficiaryAddress: '',
         amount: '',
-        delayInSeconds: '',
+        disburseDate: '',
         cancelAllowed: false,
         availableFunds: '',
         errorMessage: '',
@@ -38,6 +39,66 @@ class AddBeneficiary extends Component {
         }
     }
 
+    validate = () => {
+
+        var error = '';
+        var errors = [];
+        var valid = true;
+
+        // Clear previous error messages
+        this.setState({ errorMessage: '' });
+
+        // RECEIVING ADDRESS
+        if ((validator.isEmpty(this.state.beneficiaryAddress)) ||
+            (!validator.isEthereumAddress(this.state.beneficiaryAddress))){
+            errors.push('Receiving Address');
+            valid = false;
+        }
+
+        // AMOUNT
+        if ((validator.isEmpty(this.state.amount)) ||
+            (!validator.isNumeric(this.state.amount))){
+            errors.push('Amount');
+            valid = false;
+        }
+
+        // DISBURSEMENT DATE
+        if ((validator.isEmpty(this.state.beneficiaryAddress)) ||
+            (!validator.isDate(this.state.disburseDate))) {
+            errors.push('Payment Date');
+            valid = false;
+        }
+
+        // DISBURSEMENT DATE IN FUTURE
+        if (this.getDelayInSeconds() < 0) {
+            errors.push('Payment date must be in future');
+            valid = false;
+        }
+
+        // Assemble error message
+        if (!valid){
+            error = 'Invalid: ';
+            var errorList = '';
+            errors.forEach(function (item) {
+                errorList += item + ', '; 
+            });
+            error += errorList;
+        }
+
+        // Remove last comma in error list
+        var index = error.lastIndexOf(',');
+        error = error.substr(0, index);
+        this.setState({ errorMessage: error });
+        return valid;
+    }
+
+    getDelayInSeconds = () => {
+        var currentTimeInSeconds = new Date().getTime() / 1000;
+        var disbursementInSeconds = new Date(this.state.disburseDate).getTime() / 1000;
+        var delayInSeconds = disbursementInSeconds - currentTimeInSeconds;
+        return Math.round(delayInSeconds);
+    }
+
     onClickAdd = async (event) => {
 
         // This prevents form from being submitted to the server
@@ -45,37 +106,43 @@ class AddBeneficiary extends Component {
         this.setState({loading: true});
 
         try {
-            console.log("START ADD BENEFICIARY");
 
-            var weiAmount = this.state.web3.utils.toWei(this.state.amount, 'ether');    
-            console.log("ADD: " + this.state.beneficiaryAddress);
-            console.log("DELAY: " + this.state.delayInSeconds);
-            console.log("AMT: " + weiAmount);  
-            console.log("CANCEL ALLOWED: " + this.state.cancelAllowed);
-            
-            await this.state.disburse.methods.addBeneficiarySeconds(
-                                    this.state.beneficiaryAddress, 
-                                    this.state.delayInSeconds, 
-                                    weiAmount,
-                                    this.state.cancelAllowed)
-                                .send({from: this.props.trustAddress});
+            if (this.validate()){
 
-            this.updateAvailableFundsBalance();
+                console.log("START ADD BENEFICIARY");
 
-            // Clear fields
-            this.setState({beneficiaryAddress: ''});
-            this.setState({amount: ''});
-            this.setState({delayInSeconds: ''});
-            //this.setState({cancelAllowed: false});
-            this.setState({errorMessage: '' });
+                var weiAmount = this.state.web3.utils.toWei(this.state.amount, 'ether');    
+                var delayInSeconds = this.getDelayInSeconds();
+                
+                console.log("ADD: " + this.state.beneficiaryAddress);
+                console.log("DELAY IN SECONDS: " + delayInSeconds);
+                console.log("AMT: " + weiAmount);  
+                console.log("CANCEL ALLOWED: " + this.state.cancelAllowed);
+                
+                await this.state.disburse.methods.addBeneficiarySeconds(
+                                        this.state.beneficiaryAddress, 
+                                        delayInSeconds, 
+                                        weiAmount,
+                                        this.state.cancelAllowed)
+                                    .send({from: this.props.trustAddress});
+
+                this.updateAvailableFundsBalance();
+
+                // Clear fields
+                this.setState({beneficiaryAddress: ''});
+                this.setState({amount: ''});
+                this.setState({disburseDate: ''});
+                //this.setState({cancelAllowed: false});
+                this.setState({errorMessage: '' });
+            }
         }
         catch(err)
         {
             this.setState({ errorMessage: err.message });
         }
-
+        
+        
         this.setState({loading: false});
-
         this.forceUpdate();
     }
 
@@ -121,7 +188,7 @@ class AddBeneficiary extends Component {
                     <Label basic>ETH</Label>
                 </Input>
                 <br /><br />
-                <Input label='Payment Date:' placeholder='01/30/2020' onChange={event => this.setState({delayInSeconds: event.target.value})} />
+                <Input label='Payment Date:' placeholder='YYYY/MM/DD' onChange={event => this.setState({disburseDate: event.target.value})} />
                 <br /><br />
                 <Checkbox label='Allow Cancellation Before Payment Date' onChange={this.toggleCheckboxValue} />
                 <br /><br />
