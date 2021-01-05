@@ -31,38 +31,25 @@ var getNetworkId = async (web3) => {
 }
 */
 
-var getDisburse = (web3) => {
+var getDisburse = (web3, networkId) => {
 
     var disburse;
-
-    //var id = getNetworkId(web3);
-    //console.log('NetworkID: ' + id);
  
-    web3.eth.net.getId().then(netId => {
-        switch (netId) {
-            case 5777:
-                console.log('This is localhost');
-                disburse = new web3.eth.Contract(DISBURSEV1_JSON.abi, DISBURSEV1_JSON.networks['5777'].address);
-                break;
-            case 1:
-                console.log('This is mainnet');
-                break;
-            case 5:
-                console.log('This is the goerli test network.');
-                let CONTRACT_ADDRESS = '0x9102994DC42CFF82D60BeCe90d31B8d409Afcbd3';
-                disburse = new web3.eth.Contract(DISBURSEV1GOERLI_JSON, CONTRACT_ADDRESS);
-                break;
-          default:
-            console.log('This is an unknown network: ' + netId);
-        }
-    })
-
-    // Localhost network
-    var networkId = '5777';
-
-    // Localhost
-    if (true){
-        disburse = new web3.eth.Contract(DISBURSEV1_JSON.abi, DISBURSEV1_JSON.networks[networkId].address);
+    switch (networkId) {
+        case 5777:
+            console.log('This is localhost');
+            disburse = new web3.eth.Contract(DISBURSEV1_JSON.abi, DISBURSEV1_JSON.networks['5777'].address);
+            break;
+        case 1:
+            console.log('This is mainnet');
+            break;
+        case 5:
+            console.log('This is the goerli test network.');
+            let CONTRACT_ADDRESS = '0x59be63e2f37e825B5253E843b5baE0C1C47e28A5';
+            disburse = new web3.eth.Contract(DISBURSEV1GOERLI_JSON, CONTRACT_ADDRESS);
+            break;
+        default:
+        console.log('This is an unknown network: ' + networkId);
     }
  
     console.log('DISBURSE: ' + disburse);

@@ -15,6 +15,11 @@
 				"internalType": "uint256",
 				"name": "_amount",
 				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "_cancelAllowed",
+				"type": "bool"
 			}
 		],
 		"name": "addBeneficiary",
@@ -38,6 +43,11 @@
 				"internalType": "uint256",
 				"name": "_amount",
 				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "_cancelAllowed",
+				"type": "bool"
 			}
 		],
 		"name": "addBeneficiaryDays",
@@ -61,12 +71,30 @@
 				"internalType": "uint256",
 				"name": "_amount",
 				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "_cancelAllowed",
+				"type": "bool"
 			}
 		],
 		"name": "addBeneficiarySeconds",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "bool",
+				"name": "flag",
+				"type": "bool"
+			}
+		],
+		"name": "CancelAllowed",
+		"type": "event"
 	},
 	{
 		"inputs": [],
@@ -148,6 +176,32 @@
 		"inputs": [
 			{
 				"internalType": "uint256",
+				"name": "_disbursementId",
+				"type": "uint256"
+			}
+		],
+		"name": "refundTrust",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "bool",
+				"name": "flag",
+				"type": "bool"
+			}
+		],
+		"name": "RefundTrust",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
 				"name": "_beneficiaryId",
 				"type": "uint256"
 			}
@@ -156,6 +210,19 @@
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "bool",
+				"name": "flag",
+				"type": "bool"
+			}
+		],
+		"name": "RemoveBeneficiary",
+		"type": "event"
 	},
 	{
 		"inputs": [
@@ -234,7 +301,7 @@
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_id",
+				"name": "_beneficiaryId",
 				"type": "uint256"
 			}
 		],
@@ -266,6 +333,11 @@
 						"internalType": "uint256",
 						"name": "amount",
 						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "cancelAllowed",
+						"type": "bool"
 					},
 					{
 						"internalType": "bool",

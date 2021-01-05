@@ -9,11 +9,13 @@ import DisburseHeader from './Header';
 import DisburseFooter from './Footer';
 import Web3 from "web3";
 import Web3Modal from "web3modal";
+import utility from '../utility';
 
 class Disburse extends Component {
 
     state = {
         web3: null,
+        disburse: null,
         contractAddress: '',
         trustAddress: '',
     } 
@@ -35,19 +37,19 @@ class Disburse extends Component {
     callbackUpdateAllComponents = () => {        
         console.log("PARENT FORCE UPDATE CALLED (UpdateAddBeneficiary)");
         
-        this.refs.cFundAccount.componentDidMount(this.state.web3);
-        this.refs.cAddBeneficiary.componentDidMount(this.state.web3);
-        this.refs.cDisbursementList.componentDidMount(this.state.web3);
+        this.refs.cFundAccount.componentDidMount(this.state.web3, this.state.disburse);
+        this.refs.cAddBeneficiary.componentDidMount(this.state.web3, this.state.disburse);
+        this.refs.cDisbursementList.componentDidMount(this.state.web3, this.state.disburse);
     }
 
     callbackUpdateAddBeneficiary = () => {        
         console.log("PARENT FORCE UPDATE CALLED (UpdateAddBeneficiary)");        
-        this.refs.cAddBeneficiary.componentDidMount(this.state.web3);
+        this.refs.cAddBeneficiary.componentDidMount(this.state.web3, this.state.disburse);
     }
 
     callbackUpdateBeneficiaryList = () => {        
         console.log("PARENT FORCE UPDATE CALLED (UpdateBeneficiaryList)");
-        this.refs.cBeneficiaryList.componentDidMount(this.state.web3);
+        this.refs.cBeneficiaryList.componentDidMount(this.state.web3, this.state.disburse);
     }
 
     callbackLoadWallet = async () => {        
@@ -67,10 +69,15 @@ class Disburse extends Component {
         const web3 = new Web3(provider);
         this.setState({web3: web3});
 
-        this.refs.cFundAccount.componentDidMount(this.state.web3);
-        this.refs.cAddBeneficiary.componentDidMount(this.state.web3);
-        this.refs.cBeneficiaryList.componentDidMount(this.state.web3);
-        this.refs.cDisbursementList.componentDidMount(this.state.web3);
+        const networkId = await web3.eth.net.getId();
+        console.log('NETWORK ID: ' + networkId);
+        var disburse = utility.getDisburse(web3, networkId);
+        this.setState({disburse: disburse});
+
+        this.refs.cFundAccount.componentDidMount(web3, disburse);
+        this.refs.cAddBeneficiary.componentDidMount(web3, disburse);
+        this.refs.cBeneficiaryList.componentDidMount(web3, disburse);
+        this.refs.cDisbursementList.componentDidMount(web3, disburse);
     }
 
     render() {

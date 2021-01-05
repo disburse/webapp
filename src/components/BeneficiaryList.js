@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Header, Table, Label, Message } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import BeneficiaryRow from './BeneficiaryRow';
-import utility from '../utility';
 
 class BeneficiaryList extends Component {
 
@@ -61,12 +60,12 @@ class BeneficiaryList extends Component {
         }
     }
 
-    componentDidMount = async (web3) => {
+    componentDidMount = async (web3, disburse) => {
         
-        if (web3 !== undefined){
+        if (web3 !== undefined && disburse !== undefined){
 
             this.setState({web3: web3});
-            this.setState({disburse: utility.getDisburse(web3)});
+            this.setState({disburse: disburse});
 
             await web3.eth.net.getId();  
             
