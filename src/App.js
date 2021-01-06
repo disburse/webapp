@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import './App.css';
 import HomepageLayout from './components/HomepageLayout';
 import Disburse from './components/Disburse';
+import Contact from './components/Contact';
 import Error from './components/Error';
 
 class App extends Component {
@@ -14,6 +15,7 @@ class App extends Component {
         <Switch> 
             <Route exact path='/' component={HomepageLayout}></Route>
             <Route exact path='/pay' component={Disburse}></Route>
+            <Route exact path='/contact' component={Contact}></Route>
             <Route component={Error}/>
         </Switch>
         

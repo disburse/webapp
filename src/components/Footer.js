@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Grid, Header, List, Segment, Container, Divider, Image } from 'semantic-ui-react';
+import { Link } from "react-router-dom";
 const logo = require('../images/pigeon.png');
 
 // Header & Footer
@@ -24,6 +25,9 @@ class DisburseFooter extends Component {
                         <Grid.Column width={3}>
                         <Header inverted as='h4' content='Community' />
                         <List link inverted>
+                            <Link to='/contact'>
+                                <List.Item>Contact Us</List.Item>
+                            </Link>
                             <a href="https://twitter.com/DisburseHQ">
                                 <List.Item as='a'>Twitter</List.Item>
                             </a>

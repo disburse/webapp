@@ -44,6 +44,11 @@ npm install --save @artsy/fresnel
 
 npm install --save validator
 
+8. Email
+
+npm install --save emailjs-com
+
+Account with: https://www.emailjs.com/
 
 NOTES:
 
