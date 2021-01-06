@@ -22,6 +22,9 @@ class Contact extends Component {
 
         var valid = true;
 
+        // Clear previous error message
+        this.setState({errorMessage: ''});
+
         if (validator.isEmpty(this.state.firstname) ||
             validator.isEmpty(this.state.email) ||
             validator.isEmpty(this.state.message)){
