@@ -50,6 +50,22 @@ npm install --save emailjs-com
 
 Account with: https://www.emailjs.com/
 
+9. Mocha Testing (from react side).
+
+npm install -g mocha
+
+npm install esm (globally installing this did not seem to work for some reason)
+
+Modify package.json:
+
+{
+  "scripts": {
+    "test": "mocha -r esm"
+  }
+}
+
+To run: npm test
+
 NOTES:
 
 The person who creates the trust is called the settlor, grantor, or trustor.
