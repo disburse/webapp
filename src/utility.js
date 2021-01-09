@@ -37,22 +37,22 @@ var getDisburse = (web3, networkId) => {
  
     switch (networkId) {
         case 5777:
-            console.log('This is localhost');
+            //console.log('This is localhost');
             disburse = new web3.eth.Contract(DISBURSEV1_JSON.abi, DISBURSEV1_JSON.networks['5777'].address);
             break;
         case 1:
-            console.log('This is mainnet');
+            //console.log('This is mainnet');
             break;
         case 5:
-            console.log('This is the goerli test network.');
-            let CONTRACT_ADDRESS = '0x59be63e2f37e825B5253E843b5baE0C1C47e28A5';
+            //console.log('This is the goerli test network.');
+            let CONTRACT_ADDRESS = '0x9f9CaFB3Ce001fB305122B09fB63fCd442A272ea';
             disburse = new web3.eth.Contract(DISBURSEV1GOERLI_JSON, CONTRACT_ADDRESS);
             break;
         default:
         console.log('This is an unknown network: ' + networkId);
     }
  
-    console.log('DISBURSE: ' + disburse);
+    //console.log('DISBURSE: ' + disburse);
     return disburse;
 }
 

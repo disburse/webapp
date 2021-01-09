@@ -52,13 +52,13 @@ class DisbursementList extends Component {
             await web3.eth.net.getId();  
 
             var beneficiaryAddress = this.props.trustAddress;
-            var topId = await this.state.disburse.methods.topDisbursementId(beneficiaryAddress).call();
+            var topId = await this.state.disburse.methods.getTopDisbursementId().call({from: beneficiaryAddress});
 
             var list = [];
             for (var id=1; id<=topId; id++){
 
                 // Iterate through disburements and record the distribution ID
-                var disbursement = await this.state.disburse.methods.disbursements(this.props.trustAddress, id).call({from: this.props.trustAddress});
+                var disbursement = await this.state.disburse.methods.getDisbursement(this.props.trustAddress, id).call({from: this.props.trustAddress});
                 
                 var beneficiaryId = disbursement['beneficiaryId'];
                 var trustAddress = disbursement['trustAddress']
@@ -72,6 +72,7 @@ class DisbursementList extends Component {
                 }
             }
     
+            this.setState({errorMessage: ''});
             this.setState({disbursementList: list});
 
         }
