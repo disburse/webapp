@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Header, Container, Divider } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
+import Balance from './Balance';
 import FundAccount from './FundAccount';
 import AddBeneficiary from './AddBeneficiary';
 import BeneficiaryList from './BeneficiaryList';
@@ -28,7 +29,19 @@ class Disburse extends Component {
     //    super(props);
     //}
 
-    //componentDidMount = async () => {}
+    componentDidMount = async () => {        
+        var web3 = utility.getContextWeb3();
+        var disburse = utility.getContextDisburse();
+
+        console.log('Context Web3: ' + utility.getContextWeb3());
+        console.log('Context Disburse: ' + utility.getContextDisburse());
+
+        if (web3 !== 'undefined' && disburse !== 'undefined') {
+            this.setState({web3: web3});
+            this.setState({disburse: disburse});
+            this.loadAllComponents(web3, disburse);
+        }
+    }
 
     callbackTrustAddress = (address) => {
         this.setState({trustAddress: address})
@@ -36,7 +49,7 @@ class Disburse extends Component {
 
     callbackUpdateAllComponents = () => {        
         console.log("PARENT FORCE UPDATE CALLED (UpdateAddBeneficiary)");
-        
+                
         this.refs.cFundAccount.componentDidMount(this.state.web3, this.state.disburse);
         this.refs.cAddBeneficiary.componentDidMount(this.state.web3, this.state.disburse);
         this.refs.cDisbursementList.componentDidMount(this.state.web3, this.state.disburse);
@@ -44,6 +57,7 @@ class Disburse extends Component {
 
     callbackUpdateAddBeneficiary = () => {        
         console.log("PARENT FORCE UPDATE CALLED (UpdateAddBeneficiary)");        
+        this.refs.cBalance.componentDidMount(this.state.web3, this.state.disburse);
         this.refs.cAddBeneficiary.componentDidMount(this.state.web3, this.state.disburse);
     }
 
@@ -74,6 +88,11 @@ class Disburse extends Component {
         var disburse = utility.getDisburse(web3, networkId);
         this.setState({disburse: disburse});
 
+        this.loadAllComponents(web3, disburse);
+    }
+
+    loadAllComponents = (web3, disburse) => {        
+        this.refs.cBalance.componentDidMount(web3, disburse);
         this.refs.cFundAccount.componentDidMount(web3, disburse);
         this.refs.cAddBeneficiary.componentDidMount(web3, disburse);
         this.refs.cBeneficiaryList.componentDidMount(web3, disburse);
@@ -90,6 +109,11 @@ class Disburse extends Component {
                     <Divider horizontal>
                     Testing In-Progress: Goerli Testnet Network
                     </Divider>
+                </Grid.Column>
+            </Grid>
+            <Grid textAlign='center' columns={1}>
+                <Grid.Column>  
+                    <Balance ref = "cBalance" />
                 </Grid.Column>
             </Grid>
             <Grid textAlign='left' columns={1}>

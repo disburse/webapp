@@ -19,8 +19,31 @@ import {
   Visibility
 } from 'semantic-ui-react'
 import { Link } from "react-router-dom";
+import Web3 from "web3";
+import Web3Modal from "web3modal";
+import utility from '../utility';
 
 const logo = require('../images/pigeon.png');
+
+const onLaunchApp = async () => {
+
+  const providerOptions = {
+    /* See Provider Options Section */
+  };
+  
+  const web3Modal = new Web3Modal({
+    //network: "mainnet", // optional
+    //cacheProvider: true, // optional
+    providerOptions // required
+  });
+  
+  const provider = await web3Modal.connect();
+  const web3 = new Web3(provider);
+  const networkId = await web3.eth.net.getId();
+  var disburse = utility.getDisburse(web3, networkId);
+
+  utility.setContext(web3, disburse);
+}
 
 const { MediaContextProvider, Media } = createMedia({
   breakpoints: {
@@ -58,7 +81,7 @@ const HomepageHeading = ({ mobile }) => (
       }}
     />
     <Link to='/pay'>
-        <Button primary size='huge'>
+        <Button primary size='huge' onClick={onLaunchApp}>
         Get Started
         <Icon name='right arrow' />
         </Button>
@@ -75,11 +98,12 @@ HomepageHeading.propTypes = {
  * It can be more complicated, but you can create really flexible markup.
  */
 class DesktopContainer extends Component {
-  state = {}
+  
+  state = {} 
 
   hideFixedMenu = () => this.setState({ fixed: false })
   showFixedMenu = () => this.setState({ fixed: true })
-
+  
   render() {
     const { children } = this.props
     const { fixed } = this.state
@@ -112,7 +136,12 @@ class DesktopContainer extends Component {
                 </Link>
                 <Menu.Item position='right'>
                     <Link to='/pay'>
-                        <Button as='a' inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }}>
+                        <Button 
+                            as='a' 
+                            inverted={!fixed} 
+                            primary={fixed} 
+                            style={{ marginLeft: '0.5em' }}
+                            onClick={onLaunchApp} >
                             Launch App
                         </Button>
                     </Link>
@@ -176,7 +205,11 @@ class MobileContainer extends Component {
                   </Menu.Item>
                   <Menu.Item position='right'>
                     <Link to='/pay'>
-                      <Button as='a' inverted style={{ marginLeft: '0.5em' }}>
+                      <Button 
+                          as='a' 
+                          inverted 
+                          style={{ marginLeft: '0.5em' }} 
+                          onClick={onLaunchApp}>
                         Launch App
                       </Button>
                     </Link>

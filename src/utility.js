@@ -1,3 +1,4 @@
+const Web3 = require("web3");
 const DISBURSEV1_JSON = require('./contracts/DisburseV1.json');
 const DISBURSEV1GOERLI_JSON = require('./contracts/DisburseV1Goerli.json');
 
@@ -56,4 +57,43 @@ var getDisburse = (web3, networkId) => {
     return disburse;
 }
 
-export default { capitalize, timeConverter, getDisburse };
+var getWeb3 = (networkId) => {
+
+    var web3;
+ 
+    switch (networkId) {
+        case 5777:
+            web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+            break;
+        case 1:
+            web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io/v3/753227e9030d4656a9ef958f23d61c44"));
+            break;
+        case 5:
+            //console.log('This is the goerli test network.');
+            web3 = new Web3(new Web3.providers.HttpProvider("https://goerli.infura.io/v3/5bcd325e39b94eef8c0f11fc550ccf9e"));
+            break;
+        default:
+            console.log('This is an unknown network: ' + networkId);
+    }
+ 
+    return web3;
+}
+
+let contextWeb3;
+let contextDisburse;
+
+var setContext = (web3, disburse) => {
+    contextWeb3 = web3;
+    contextDisburse = disburse;
+}
+
+var getContextWeb3 = () => { return contextWeb3; }
+var getContextDisburse = () => { return contextDisburse; }
+
+export default {capitalize, 
+                timeConverter, 
+                getDisburse, 
+                getWeb3, 
+                setContext, 
+                getContextWeb3, 
+                getContextDisburse };
