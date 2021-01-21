@@ -19,35 +19,8 @@ import {
   Visibility
 } from 'semantic-ui-react'
 import { Link } from "react-router-dom";
-import Web3 from "web3";
-import Web3Modal from "web3modal";
-import utility from '../utility';
 
 const logo = require('../images/pigeon.png');
-
-const onLaunchApp = async () => {
-
-  const providerOptions = {
-    /* See Provider Options Section */
-  };
-  
-  const web3Modal = new Web3Modal({
-    //network: "mainnet", // optional
-    //cacheProvider: true, // optional
-    providerOptions // required
-  });
-  
-  const provider = await web3Modal.connect();
-  const web3 = new Web3(provider);
-  utility.setWeb3(web3);
-
-  const networkId = await web3.eth.net.getId();
-  console.log('Homepage Network: ' + networkId)
-  utility.setNetworkId(networkId);
-
-  utility.getInfura(networkId);
-  utility.getDisburse(web3, networkId);
-}
 
 const { MediaContextProvider, Media } = createMedia({
   breakpoints: {
@@ -85,7 +58,7 @@ const HomepageHeading = ({ mobile }) => (
       }}
     />
     <Link to='/pay'>
-        <Button primary size='huge' onClick={onLaunchApp}>
+        <Button primary size='huge'>
         Get Started
         <Icon name='right arrow' />
         </Button>
@@ -144,8 +117,7 @@ class DesktopContainer extends Component {
                             as='a' 
                             inverted={!fixed} 
                             primary={fixed} 
-                            style={{ marginLeft: '0.5em' }}
-                            onClick={onLaunchApp} >
+                            style={{ marginLeft: '0.5em' }}>
                             Launch App
                         </Button>
                     </Link>
@@ -212,8 +184,7 @@ class MobileContainer extends Component {
                       <Button 
                           as='a' 
                           inverted 
-                          style={{ marginLeft: '0.5em' }} 
-                          onClick={onLaunchApp}>
+                          style={{ marginLeft: '0.5em' }}>
                         Launch App
                       </Button>
                     </Link>

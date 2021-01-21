@@ -15,9 +15,7 @@ import utility from '../utility';
 class Disburse extends Component {
 
     state = {
-        networkId: null,
         web3: null,
-        infura: null,
         disburse: null,
         contractAddress: '',
         trustAddress: '',
@@ -33,17 +31,14 @@ class Disburse extends Component {
 
     componentDidMount = async () => {        
         var web3 = utility.getWeb3();
-        var disburse = utility.getDisburse();
+        var disburse = utility.getDisburse(web3);
 
-        console.log('Context Web3: ' + utility.getWeb3());
-        console.log('Context Disburse: ' + utility.getDisburse());
+        console.log('DISBURSE: componentDidMount');
 
-        if (web3 !== 'undefined' && disburse !== 'undefined') {
-            console.log('BEGIN LOAD');
-            this.setState({web3: web3});
-            this.setState({disburse: disburse});
-            this.loadAllComponents();
-        }
+        this.setState({web3: web3});
+        this.setState({disburse: disburse});
+
+        this.loadAllComponents();
     }
 
     callbackTrustAddress = (address) => {
@@ -60,7 +55,7 @@ class Disburse extends Component {
 
     callbackUpdateAddBeneficiary = () => {        
         console.log("PARENT FORCE UPDATE CALLED (UpdateAddBeneficiary)");        
-        this.refs.cBalance.componentDidMount(this.state.web3, this.state.disburse);
+        this.refs.cBalance.componentDidMount();
         this.refs.cAddBeneficiary.componentDidMount(this.state.web3, this.state.disburse);
     }
 
@@ -70,8 +65,7 @@ class Disburse extends Component {
     }
 
     callbackLoadWallet = async () => {        
-        console.log('CLICK LOAD WALLET');
-      
+     
         const providerOptions = {
           /* See Provider Options Section */
         };
@@ -84,29 +78,21 @@ class Disburse extends Component {
         
         const provider = await web3Modal.connect();
         const web3 = new Web3(provider);
-        this.setState({web3: web3});
 
-        const networkId = await web3.eth.net.getId();
-        this.setState({networkId: networkId});
+        await utility.loadNetwork(web3);
+        
+        const disburse = utility.getDisburse(web3);
 
-        const infura = utility.getInfura(networkId);
-        this.setState({infura: infura});
-
-        const disburse = utility.getDisburse(web3, networkId);
-        this.setState({disburse: disburse});
+        this.setState({web3});
+        this.setState({disburse});
 
         this.loadAllComponents();
     }
 
     loadAllComponents = () => {    
         
-        console.log('NETWORK: ' + this.state.networkId);
-        console.log('WEB3: ' + this.state.web3);
-        console.log('INFURA: ' + this.state.infura);
-        console.log('DISBURSE: ' + this.state.disburse);
-        
         if (this.state.web3 != null && this.state.disburse != null) {
-            this.refs.cBalance.componentDidMount(this.state.web3, this.state.disburse);
+            this.refs.cBalance.componentDidMount();
             this.refs.cFundAccount.componentDidMount(this.state.web3, this.state.disburse);
             this.refs.cAddBeneficiary.componentDidMount(this.state.web3, this.state.disburse);
             this.refs.cBeneficiaryList.componentDidMount(this.state.web3, this.state.disburse);

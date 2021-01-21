@@ -1,5 +1,10 @@
 const Web3 = require("web3");
+
 const DISBURSEV1_JSON = require('./contracts/DisburseV1.json');
+
+//let NETWORK_ID = 1;     // Mainnet
+let NETWORK_ID = 5;     // Goerli
+//let NETWORK_ID = 5777;  // Localhost
 
 var capitalize = (s) => {
     if (typeof s !== 'string') return ''
@@ -24,34 +29,34 @@ var timeConverter = (disburseDate) => {
 // This function cannot be async, otherwise the calling code will continue to 
 // execute before the function is finished loading.
 
-/*
-var getNetworkId = async (web3) => {
-    var id = await web3.eth.net.getId();
-    return id;
+var loadNetwork = async (web3) => {
+    NETWORK_ID = await web3.eth.net.getId();
+    return NETWORK_ID;
 }
-*/
 
-var getDisburse = (web3Object, networkId) => {
+var getDisburse = (web3) => {
  
     var disburse;
 
-    switch (networkId) {
-        case 5777:
-            //console.log('This is localhost');
-            disburse = new web3Object.eth.Contract(DISBURSEV1_JSON.abi, DISBURSEV1_JSON.networks['5777'].address);
-            break;
-        case 1:
-            //console.log('This is mainnet');
-            disburse = new web3Object.eth.Contract(DISBURSEV1_JSON.abi, DISBURSEV1_JSON.networks['1'].address);
-            break;
-        case 5:
-            //console.log('This is the goerli test network.');
-            disburse = new web3Object.eth.Contract(DISBURSEV1_JSON.abi, DISBURSEV1_JSON.networks['5'].address);
-            break;
-        default:
-        console.log('This is an unknown network: ' + networkId);
-    }
+    if (web3 !== undefined){
 
+        switch (NETWORK_ID) {
+            case 5777:
+                //console.log('This is localhost');
+                disburse = new web3.eth.Contract(DISBURSEV1_JSON.abi, DISBURSEV1_JSON.networks['5777'].address);
+                break;
+            case 1:
+                //console.log('This is mainnet');
+                disburse = new web3.eth.Contract(DISBURSEV1_JSON.abi, DISBURSEV1_JSON.networks['1'].address);
+                break;
+            case 5:
+                //console.log('This is the goerli test network.');
+                disburse = new web3.eth.Contract(DISBURSEV1_JSON.abi, DISBURSEV1_JSON.networks['5'].address);
+                break;
+            default:
+            console.log('This is an unknown network: ' + NETWORK_ID);
+        }
+    }
     return disburse;
 }
 
@@ -77,38 +82,31 @@ var getInfura = (networkId) => {
     return infura;
 }
 
-var getMetaMask = () => {
+var getWeb3 = () => {
 
-    var metamask;
+    var web3;
 
     if (window.ethereum){
-        metamask  = new Web3(window.ethereum)
+        console.log('WINDOW.ETHEREUM')
+        web3  = new Web3(window.ethereum);
+        window.ethereum.enable();
     }
     else if (window.web3){
-        metamask = new Web3(window.web3.currentProvider);
+        console.log('WINDOW.WEB3')
+        web3 = new Web3(window.web3.currentProvider);
+        // web3 = window.web3;
+    }
+    else{
+        console.log('INFURA')
+        // If metamask is not available, then use the infura node
+        web3 = getInfura(NETWORK_ID);
     }
 
-    //else{
-    //    metamask = getInfura(networkId);
-    //}
-
-    return metamask;
+    return web3;
 }
 
-let web3;
-var setWeb3 = (web3Object) => { web3 = web3Object; }
-var getWeb3 = () => { return web3; }
-
-let networkId;
-var setNetworkId = (id) => { networkId = id; }
-var getNetworkId = () => { return networkId; }
-
 export default {capitalize, 
-                timeConverter, 
-                setWeb3, 
+                timeConverter,
+                loadNetwork, 
                 getWeb3,
-                getInfura,
-                getMetaMask,
-                getDisburse,
-                setNetworkId,
-                getNetworkId };
+                getDisburse };

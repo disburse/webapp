@@ -144,8 +144,6 @@ class FundAccount extends Component {
 
     componentDidMount = async (web3, disburse) => {
 
-        console.log('WEB3 (FundAccount): ' + web3);
-
         if (web3 !== undefined && disburse !== undefined){
 
             this.setState({web3: web3});
