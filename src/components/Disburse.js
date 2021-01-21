@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Header, Container, Divider } from 'semantic-ui-react';
+import { Grid, Header, Container, Divider, Message } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import Balance from './Balance';
 import FundAccount from './FundAccount';
@@ -15,19 +15,23 @@ import utility from '../utility';
 class Disburse extends Component {
 
     state = {
+        networkId: '',
         web3: null,
         disburse: null,
         contractAddress: '',
         trustAddress: '',
+        errorMessage: ''
     } 
 
     // The constructor for a React component is called before it is mounted. When implementing 
     // the constructor for a React.Component subclass, you should call super(props) before any 
     // other statement. Otherwise, this.props will be undefined in the constructor, which can 
     // lead to bugs.
-    //constructor(props){
-    //    super(props);
-    //}
+    constructor(props){
+        super(props);
+
+        this.checkNetwork();
+    }
 
     componentDidMount = async () => {        
         var web3 = utility.getWeb3();
@@ -79,14 +83,27 @@ class Disburse extends Component {
         const provider = await web3Modal.connect();
         const web3 = new Web3(provider);
 
-        await utility.loadNetwork(web3);
-        
+        var networkId = await utility.getNetwork(web3);
+        this.setState({networkId});
+
         const disburse = utility.getDisburse(web3);
 
         this.setState({web3});
         this.setState({disburse});
 
+        this.checkNetwork();
+
         this.loadAllComponents();
+    }
+
+    checkNetwork = () => {
+
+        if (this.state.networkId === 5){
+            this.setState({errorMessage: ''});
+        }
+        else {
+            this.setState({errorMessage: 'Please change to Goerli network.'});
+        }
     }
 
     loadAllComponents = () => {    
@@ -100,6 +117,12 @@ class Disburse extends Component {
         }
     }
 
+    displayError() {
+        if (this.state.errorMessage.length > 0) {
+            return (<Message error header="Oops!" content={this.state.errorMessage} />);
+        }
+    }
+
     render() {
         return (
         <div>
@@ -110,6 +133,7 @@ class Disburse extends Component {
                     <Divider horizontal>
                     Testing In-Progress: Goerli Testnet Network
                     </Divider>
+                    {this.displayError()}
                 </Grid.Column>
             </Grid>
             <Grid textAlign='center' columns={1}>

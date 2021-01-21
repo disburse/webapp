@@ -2,9 +2,9 @@ const Web3 = require("web3");
 
 const DISBURSEV1_JSON = require('./contracts/DisburseV1.json');
 
-//let NETWORK_ID = 1;     // Mainnet
-let NETWORK_ID = 5;     // Goerli
-//let NETWORK_ID = 5777;  // Localhost
+//let NETWORK_ID = '1';     // Mainnet
+let NETWORK_ID = '5';       // Goerli
+//let NETWORK_ID = '5777';  // Localhost
 
 var capitalize = (s) => {
     if (typeof s !== 'string') return ''
@@ -29,8 +29,9 @@ var timeConverter = (disburseDate) => {
 // This function cannot be async, otherwise the calling code will continue to 
 // execute before the function is finished loading.
 
-var loadNetwork = async (web3) => {
+var getNetwork = async (web3) => {
     NETWORK_ID = await web3.eth.net.getId();
+    console.log('LOAD NETWORK ID: ' + NETWORK_ID);
     return NETWORK_ID;
 }
 
@@ -39,24 +40,9 @@ var getDisburse = (web3) => {
     var disburse;
 
     if (web3 !== undefined){
-
-        switch (NETWORK_ID) {
-            case 5777:
-                //console.log('This is localhost');
-                disburse = new web3.eth.Contract(DISBURSEV1_JSON.abi, DISBURSEV1_JSON.networks['5777'].address);
-                break;
-            case 1:
-                //console.log('This is mainnet');
-                disburse = new web3.eth.Contract(DISBURSEV1_JSON.abi, DISBURSEV1_JSON.networks['1'].address);
-                break;
-            case 5:
-                //console.log('This is the goerli test network.');
-                disburse = new web3.eth.Contract(DISBURSEV1_JSON.abi, DISBURSEV1_JSON.networks['5'].address);
-                break;
-            default:
-            console.log('This is an unknown network: ' + NETWORK_ID);
-        }
+        disburse = new web3.eth.Contract(DISBURSEV1_JSON.abi, DISBURSEV1_JSON.networks[NETWORK_ID].address);
     }
+
     return disburse;
 }
 
@@ -65,13 +51,13 @@ var getInfura = (networkId) => {
     var infura;
 
     switch (networkId) {
-        case 5777:
+        case '5777':
             infura = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
             break;
-        case 1:
+        case '1':
             infura = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io/v3/753227e9030d4656a9ef958f23d61c44"));
             break;
-        case 5:
+        case '5':
             //console.log('This is the goerli test network.');
             infura = new Web3(new Web3.providers.HttpProvider("https://goerli.infura.io/v3/5bcd325e39b94eef8c0f11fc550ccf9e"));
             break;
@@ -107,6 +93,6 @@ var getWeb3 = () => {
 
 export default {capitalize, 
                 timeConverter,
-                loadNetwork, 
+                getNetwork, 
                 getWeb3,
                 getDisburse };
