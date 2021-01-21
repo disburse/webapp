@@ -12,10 +12,9 @@ class Balance extends Component {
     componentDidMount = async (web3, disburse) => {
 
         if (web3 !== undefined && disburse !== undefined){
-
             this.setState({web3: web3});
             this.setState({disburse: disburse});
- 
+
             var weiBalance = await disburse.methods.getContractBalance().call();
             var etherBalance = this.state.web3.utils.fromWei(weiBalance.toString(), 'ether');
             this.setState({balance: etherBalance});

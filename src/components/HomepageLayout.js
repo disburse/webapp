@@ -39,10 +39,14 @@ const onLaunchApp = async () => {
   
   const provider = await web3Modal.connect();
   const web3 = new Web3(provider);
-  const networkId = await web3.eth.net.getId();
-  var disburse = utility.getDisburse(web3, networkId);
+  utility.setWeb3(web3);
 
-  utility.setContext(web3, disburse);
+  const networkId = await web3.eth.net.getId();
+  console.log('Homepage Network: ' + networkId)
+  utility.setNetworkId(networkId);
+
+  utility.getInfura(networkId);
+  utility.getDisburse(web3, networkId);
 }
 
 const { MediaContextProvider, Media } = createMedia({

@@ -84,8 +84,13 @@ class FundAccount extends Component {
             if (this.validate()){
 
                 var weiAmount = this.state.web3.utils.toWei(this.state.amount, 'ether');
+                
+                console.log('CALLING CONTRIBUTE METHOD')
                 await this.state.disburse.methods.contributeToTrust().send({ from: this.state.trustAddress, value: weiAmount });
+                
+                console.log('UPDATE DEPOSITED FUNDS BALANCE');
                 this.updateDepositedFundsBalance();
+                console.log('UPDATE COMPLETE')
 
                 this.setState({ amount: '' });
                 this.setState({ errorMessage: '' });
@@ -96,6 +101,7 @@ class FundAccount extends Component {
             this.setState({ errorMessage: err.message });
         }
 
+        console.log('SET STATE LOADING FALSE');
         this.setState({loading: false});
     };
 
