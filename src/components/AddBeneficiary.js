@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Input, Button, Label, Header, Message, Checkbox } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import validator from 'validator';
+import network from '../network';
 
 class AddBeneficiary extends Component {
 
@@ -156,12 +157,15 @@ class AddBeneficiary extends Component {
         this.setState({cancelAllowed: checked});
     }
 
-    componentDidMount = async (web3, disburse) => {
+    componentDidMount = async () => {
 
-        if (web3 !== undefined && disburse !== undefined){
+        if (network.hasProvider()) {
 
-            this.setState({web3: web3});
-            this.setState({disburse: disburse});
+            let web3 = network.getWeb3();
+            let disburse = network.getDisburse();
+
+            this.setState({web3});
+            this.setState({disburse});
 
             // Removing this line cause the form to not load
             await web3.eth.net.getId();  

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Header, Table, Label, Message } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import BeneficiaryRow from './BeneficiaryRow';
+import network from '../network';
 
 class BeneficiaryList extends Component {
 
@@ -60,12 +61,15 @@ class BeneficiaryList extends Component {
         }
     }
 
-    componentDidMount = async (web3, disburse) => {
+    componentDidMount = async () => {
         
-        if (web3 !== undefined && disburse !== undefined){
+        if (network.hasProvider()) {
 
-            this.setState({web3: web3});
-            this.setState({disburse: disburse});
+            let web3 = network.getWeb3();
+            let disburse = network.getDisburse();
+
+            this.setState({web3});
+            this.setState({disburse});
 
             await web3.eth.net.getId();  
             

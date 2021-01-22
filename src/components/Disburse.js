@@ -10,7 +10,7 @@ import DisburseHeader from './Header';
 import DisburseFooter from './Footer';
 import Web3 from "web3";
 import Web3Modal from "web3modal";
-import utility from '../utility';
+import network from '../network';
 
 class Disburse extends Component {
 
@@ -31,16 +31,17 @@ class Disburse extends Component {
         super(props);
 
         this.checkNetwork();
+        this.accountChanged();
     }
 
     componentDidMount = async () => {        
-        var web3 = utility.getWeb3();
-        var disburse = utility.getDisburse(web3);
+        var web3 = network.getWeb3();
+        var disburse = network.getDisburse();
 
         console.log('DISBURSE: componentDidMount');
 
-        this.setState({web3: web3});
-        this.setState({disburse: disburse});
+        this.setState({web3});
+        this.setState({disburse});
 
         this.loadAllComponents();
     }
@@ -52,20 +53,20 @@ class Disburse extends Component {
     callbackUpdateAllComponents = () => {        
         console.log("PARENT FORCE UPDATE CALLED (UpdateAddBeneficiary)");
                 
-        this.refs.cFundAccount.componentDidMount(this.state.web3, this.state.disburse);
-        this.refs.cAddBeneficiary.componentDidMount(this.state.web3, this.state.disburse);
-        this.refs.cDisbursementList.componentDidMount(this.state.web3, this.state.disburse);
+        this.refs.cFundAccount.componentDidMount();
+        this.refs.cAddBeneficiary.componentDidMount();
+        this.refs.cDisbursementList.componentDidMount();
     }
 
     callbackUpdateAddBeneficiary = () => {        
         console.log("PARENT FORCE UPDATE CALLED (UpdateAddBeneficiary)");        
         this.refs.cBalance.componentDidMount();
-        this.refs.cAddBeneficiary.componentDidMount(this.state.web3, this.state.disburse);
+        this.refs.cAddBeneficiary.componentDidMount();
     }
 
     callbackUpdateBeneficiaryList = () => {        
         console.log("PARENT FORCE UPDATE CALLED (UpdateBeneficiaryList)");
-        this.refs.cBeneficiaryList.componentDidMount(this.state.web3, this.state.disburse);
+        this.refs.cBeneficiaryList.componentDidMount();
     }
 
     callbackLoadWallet = async () => {        
@@ -83,10 +84,10 @@ class Disburse extends Component {
         const provider = await web3Modal.connect();
         const web3 = new Web3(provider);
 
-        var networkId = await utility.getNetwork(web3);
+        var networkId = await network.getNetwork();
         this.setState({networkId});
 
-        const disburse = utility.getDisburse(web3);
+        const disburse = network.getDisburse();
 
         this.setState({web3});
         this.setState({disburse});
@@ -94,6 +95,25 @@ class Disburse extends Component {
         this.checkNetwork();
 
         this.loadAllComponents();
+
+        // Test Polling
+        // this.pollingConnection();
+    }
+
+    accountChanged = () => {
+
+        // Will be triggered ever time an account is changed in MetaMask
+        window.ethereum.on('accountsChanged', async function (accounts) {
+            var account = await network.getAccount();
+            console.log('CURRENT ACCOUNT: ' + account); 
+        })
+    }
+
+    pollingConnection = () => {
+        setInterval(async function() {
+            const newBlock = await network.getBlockNumber();
+            console.log('BLOCK: ' + newBlock);
+        }, 1000);
     }
 
     checkNetwork = () => {
@@ -110,10 +130,10 @@ class Disburse extends Component {
         
         if (this.state.web3 != null && this.state.disburse != null) {
             this.refs.cBalance.componentDidMount();
-            this.refs.cFundAccount.componentDidMount(this.state.web3, this.state.disburse);
-            this.refs.cAddBeneficiary.componentDidMount(this.state.web3, this.state.disburse);
-            this.refs.cBeneficiaryList.componentDidMount(this.state.web3, this.state.disburse);
-            this.refs.cDisbursementList.componentDidMount(this.state.web3, this.state.disburse);
+            this.refs.cFundAccount.componentDidMount();
+            this.refs.cAddBeneficiary.componentDidMount();
+            this.refs.cBeneficiaryList.componentDidMount();
+            this.refs.cDisbursementList.componentDidMount();
         }
     }
 

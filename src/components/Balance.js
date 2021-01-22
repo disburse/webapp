@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Label } from 'semantic-ui-react';
-import utility from '../utility';
+import network from '../network';
 
 class Balance extends Component {
 
@@ -23,15 +23,14 @@ class Balance extends Component {
         }
         */
         
-        let web3 = utility.getWeb3();
-        let disburse = utility.getDisburse(web3);
+        let web3 = network.getWeb3();
+        let disburse = network.getDisburse();
         this.setState({web3});
         this.setState({disburse});
 
         var weiBalance = await disburse.methods.getContractBalance().call();
         var etherBalance = this.state.web3.utils.fromWei(weiBalance.toString(), 'ether');
         this.setState({balance: etherBalance});
-    
     }
 
     render() {
