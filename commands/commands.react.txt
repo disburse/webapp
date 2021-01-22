@@ -75,3 +75,8 @@ The person who controls the assets in a trust is called the trustee.
 The person who benefits from the trust is called the beneficiary.
 
 
+10. Additional libraries to install
+
+npm install --save bignumber.js
+npm install --save axios
+

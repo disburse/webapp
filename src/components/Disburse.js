@@ -83,17 +83,14 @@ class Disburse extends Component {
         
         const provider = await web3Modal.connect();
         const web3 = new Web3(provider);
-
-        var networkId = await network.getNetwork();
-        this.setState({networkId});
-
+        const networkId = await network.getNetwork();
         const disburse = network.getDisburse();
 
         this.setState({web3});
         this.setState({disburse});
+        this.setState({networkId});
 
         this.checkNetwork();
-
         this.loadAllComponents();
 
         // Test Polling
@@ -101,16 +98,15 @@ class Disburse extends Component {
     }
 
     accountChanged = () => {
-
         // Will be triggered ever time an account is changed in MetaMask
-        window.ethereum.on('accountsChanged', async function (accounts) {
-            var account = await network.getAccount();
-            console.log('CURRENT ACCOUNT: ' + account); 
+        window.ethereum.on('accountsChanged', async (accounts) => {
+            this.setState({trustAddress: accounts[0]}); 
+            this.callbackLoadWallet();
         })
     }
 
     pollingConnection = () => {
-        setInterval(async function() {
+        setInterval(async () => {
             const newBlock = await network.getBlockNumber();
             console.log('BLOCK: ' + newBlock);
         }, 1000);

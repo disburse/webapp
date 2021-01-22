@@ -3,6 +3,7 @@ import { Input, Button, Label, Header, Message, Checkbox } from 'semantic-ui-rea
 import 'semantic-ui-css/semantic.min.css';
 import validator from 'validator';
 import network from '../network';
+import utility from '../utility';
 
 class AddBeneficiary extends Component {
 
@@ -119,12 +120,20 @@ class AddBeneficiary extends Component {
                 console.log("AMT: " + weiAmount);  
                 console.log("CANCEL ALLOWED: " + this.state.cancelAllowed);
                 
+                const gasPrice = await utility.getGasPrice();
+
+                const gas = await this.state.disburse.methods.addBeneficiarySeconds(
+                    this.state.beneficiaryAddress, 
+                    delayInSeconds, 
+                    weiAmount,
+                    this.state.cancelAllowed).estimateGas({from: this.props.trustAddress});
+
                 await this.state.disburse.methods.addBeneficiarySeconds(
                                         this.state.beneficiaryAddress, 
                                         delayInSeconds, 
                                         weiAmount,
                                         this.state.cancelAllowed)
-                                    .send({from: this.props.trustAddress});
+                                        .send({from: this.props.trustAddress, gas, gasPrice});
 
                 this.updateAvailableFundsBalance();
 
