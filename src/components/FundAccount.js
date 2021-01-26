@@ -4,6 +4,13 @@ import 'semantic-ui-css/semantic.min.css';
 import validator from 'validator';
 import network from '../network';
 
+/*
+const options = [
+    { key: 'ETH', text: 'ETH', value: 'ETH' },
+    { key: 'DPI', text: 'DPI', value: 'DPI' },
+]
+*/
+
 class FundAccount extends Component {
 
     state = {
@@ -181,7 +188,7 @@ class FundAccount extends Component {
                     <input value={this.state.amount} onChange={event => this.setState({amount: event.target.value})} />
                     <Label basic>ETH</Label>
                 </Input>
-                <br /><br />
+                <br /><br />              
                 <Label size='large' color='teal'>Deposited Funds: {this.state.depositedFunds} ETH</Label>
                 <br /><br />
                 {this.displayError()}
@@ -193,3 +200,14 @@ class FundAccount extends Component {
 }
 
 export default FundAccount;
+
+/*
+<Input
+    value={this.state.amount} 
+    onChange={event => this.setState({amount: event.target.value})}
+    label={<Dropdown defaultValue='ETH' options={options} />}
+    labelPosition='right'
+    placeholder='Amount'
+>   
+</Input>
+*/
